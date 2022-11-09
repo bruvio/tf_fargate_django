@@ -63,17 +63,23 @@ variable "state_bucket" {
 }
 variable "region" {
   description = "aws region"
-  type = string
+  type        = string
   # default = "us-east-1"
 }
 variable "bucket_name" {
 
 }
-variable "common_tags" {
 
-}
 variable "table_name" {
   description = "The name of the DynamoDB table. Must be unique in this AWS account."
   type        = string
   # default = "terraform-setup-tf-state-lock"
+}
+variable "common_tags" {
+  default = {
+    Environment = ""
+    Project     = ""
+    Owner       = ""
+    ManagedBy   = "Terraform"
+  }
 }
