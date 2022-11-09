@@ -10,10 +10,10 @@ resource "aws_ecr_repository" "app" {
   }
 }
 
-data "aws_ecr_image" "app" {
-  repository_name = var.project
-  image_tag       = "latest"
-}
+# data "aws_ecr_image" "app" {
+#   repository_name = var.project
+#   image_tag       = "latest"
+# }
 
 
 resource "aws_ecr_repository" "proxy" {
@@ -27,7 +27,7 @@ resource "aws_ecr_repository" "proxy" {
   }
 }
 
-data "aws_ecr_image" "proxy" {
-  repository_name = "${var.project}-proxy"
-  image_tag       = "latest"
-}
+# data "aws_ecr_image" "proxy" {
+#   repository_name = "${var.project}-proxy"
+#   image_tag       = "latest"
+# }

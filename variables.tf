@@ -54,6 +54,7 @@ variable "subdomain" {
     production = "api"
     staging    = "api.staging"
     dev        = "api.dev"
+    default    = "api.dev"
   }
 }
 
