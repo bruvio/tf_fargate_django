@@ -61,12 +61,19 @@ variable "state_bucket" {
   type = string
 
 }
-variable "region"{
+variable "region" {
+  description = "aws region"
+  type = string
+  # default = "us-east-1"
+}
+variable "bucket_name" {
 
 }
-variable "bucket_name"{
-  
+variable "common_tags" {
+
 }
-variable "common_tags"{
-  
+variable "table_name" {
+  description = "The name of the DynamoDB table. Must be unique in this AWS account."
+  type        = string
+  # default = "terraform-setup-tf-state-lock"
 }
