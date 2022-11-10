@@ -60,11 +60,11 @@ resource "aws_iam_policy" "AppApiCi-proxy" {
         ],
         "Resource" : "*"
       }
-   ]
+    ]
     }
   )
   tags = var.common_tags
-}    
+}
 resource "aws_iam_policy" "AppApiCi" {
   name = "${var.project}-AppApi-CI"
   policy = jsonencode({
