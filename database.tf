@@ -31,7 +31,7 @@ resource "aws_security_group" "rds" {
 
 resource "aws_db_instance" "main" {
   identifier              = "${var.prefix}-db"
-  name                    = var.db_name
+  db_name                 = var.db_name
   allocated_storage       = 20
   storage_type            = "gp2"
   engine                  = "postgres"
