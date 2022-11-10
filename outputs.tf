@@ -7,6 +7,12 @@ output "bastion_host" {
 output "api_endpoint" {
   value = aws_route53_record.app.fqdn
 }
+output "state-bucket" {
+value = aws_s3_bucket.terraform_state.name 
+}
 
+output "dynamo_db_table" {
+value = aws_dynamodb_table.terraform_lock.name
+}
 
 
