@@ -16,7 +16,7 @@ resource "aws_iam_access_key" "access-key" {
   user = aws_iam_user.user.name
 }
 
-resource "aws_iam_user_policy_attachment" "attach-user" {
+resource "aws_iam_user_policy_attachment" "attach-proxy-user" {
   user       = aws_iam_user.user.name
   policy_arn = aws_iam_policy.AppApiCi-proxy.arn
 }
