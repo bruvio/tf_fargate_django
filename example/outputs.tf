@@ -22,3 +22,15 @@ output "ecr_image_api" {
   value = "${data.aws_caller_identity.current.account_id}.dkr.ecr.${data.aws_region.current.name}.amazonaws.com/${local.project}:latest"
 }
 
+output "access-key-proxy-id" {
+  value = module.service_traffic.access-key-proxy-id
+}
+output "access-key-proxy-secret" {
+  value = module.service_traffic.access-key-proxy-secret
+}
+output "access-key-id" {
+  value = module.service_traffic.access-key-id
+}
+output "access-key-secret" {
+  value = module.service_traffic.access-key-secret
+}

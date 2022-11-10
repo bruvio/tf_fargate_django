@@ -14,5 +14,16 @@ output "state-bucket" {
 output "dynamo_db_table" {
   value = aws_dynamodb_table.terraform_lock.name
 }
-
+output "access-key-proxy-id" {
+  value = aws_iam_access_key.access-key-proxy.id
+}
+output "access-key-proxy-secret" {
+  value = aws_iam_access_key.access-key-proxy.secret
+}
+output "access-key-id" {
+  value = aws_iam_access_key.access-key.id
+}
+output "access-key-secret" {
+  value = aws_iam_access_key.access-key.secret
+}
 
