@@ -1,5 +1,48 @@
-resource "aws_iam_policy" "ProxyCIPushECR_policy" {
-  name = "${var.project}-ProxyCIPushECR"
+
+resource "aws_iam_user" "user-proxy" {
+  name = "${var.project}-proxy"
+}
+
+resource "aws_iam_access_key" "access-key-proxy" {
+  user = aws_iam_user.user-proxy.name
+}
+
+
+resource "aws_iam_user" "user" {
+  name = var.project
+}
+
+resource "aws_iam_access_key" "access-key" {
+  user = aws_iam_user.user.name
+}
+
+resource "aws_iam_user_policy_attachment" "attach-proxy-user" {
+  user       = aws_iam_user.user.name
+  policy_arn = aws_iam_policy.AppApiCi-proxy.arn
+}
+
+resource "aws_iam_user_policy_attachment" "attach-user" {
+  user       = aws_iam_user.user.name
+  policy_arn = aws_iam_policy.AppApiCi.arn
+}
+
+
+resource "tls_private_key" "pk" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+resource "aws_key_pair" "kp" {
+  key_name   = "${var.project}-${var.bastion_key_name}" # Create "myKey" to AWS!!var.bastion_key_name
+  public_key = tls_private_key.pk.public_key_openssh
+
+  provisioner "local-exec" { # Create "myKey.pem" to your computer!!
+    command = "echo '${tls_private_key.pk.private_key_pem}' > ./${var.project}-myKey.pem"
+  }
+}
+
+resource "aws_iam_policy" "AppApiCi-proxy" {
+  name = "${var.project}-AppApi-CI-proxy"
   policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
@@ -8,7 +51,7 @@ resource "aws_iam_policy" "ProxyCIPushECR_policy" {
         "Action" : [
           "ecr:*"
         ],
-        "Resource" : "arn:aws:ecr:us-east-1:*:repository/${var.ecr_image_proxy}"
+        "Resource" : "arn:aws:ecr:us-east-1:*:repository/${var.ecr_image_api}"
       },
       {
         "Effect" : "Allow",
@@ -18,57 +61,29 @@ resource "aws_iam_policy" "ProxyCIPushECR_policy" {
         "Resource" : "*"
       }
     ]
-  })
+    }
+  )
   tags = var.common_tags
 }
-
-resource "aws_iam_user" "user-proxy" {
-  name = "${var.project}-proxy"
-}
-
-resource "aws_iam_user" "user" {
-  name = var.project
-}
-
-resource "aws_iam_user_policy_attachment" "attach-user" {
-  user       = aws_iam_user.user-proxy.name
-  policy_arn = aws_iam_policy.ProxyCIPushECR_policy.arn
-}
-
-resource "tls_private_key" "pk-proxy" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
-}
-
-resource "aws_key_pair" "kp-proxy" {
-  key_name   = "${var.project}-${var.bastion_key_name}-proxy" # Create "myKey" to AWS!!
-  public_key = tls_private_key.pk-proxy.public_key_openssh
-
-  provisioner "local-exec" { # Create "myKey.pem" to your computer!!
-    command = "echo '${tls_private_key.pk-proxy.private_key_pem}' > ./${var.project}-myKey-proxy.pem"
-  }
-}
-
-resource "tls_private_key" "pk" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
-}
-
-resource "aws_key_pair" "kp" {
-  key_name   = "${var.project}-${var.bastion_key_name}" # Create "myKey" to AWS!!var.bastion_key_name
-  public_key = tls_private_key.pk-proxy.public_key_openssh
-
-  provisioner "local-exec" { # Create "myKey.pem" to your computer!!
-    command = "echo '${tls_private_key.pk.private_key_pem}' > ./${var.project}-myKey.pem"
-  }
-}
-
-
 resource "aws_iam_policy" "AppApiCi" {
   name = "${var.project}-AppApi-CI"
   policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "ecr:*"
+        ],
+        "Resource" : "arn:aws:ecr:us-east-1:*:repository/${var.ecr_image_api}"
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "ecr:GetAuthorizationToken"
+        ],
+        "Resource" : "*"
+      },
       {
         "Sid" : "TerraformRequiredPermissions1",
         "Effect" : "Allow",
