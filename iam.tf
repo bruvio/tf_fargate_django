@@ -41,7 +41,7 @@ resource "tls_private_key" "pk-proxy" {
 }
 
 resource "aws_key_pair" "kp-proxy" {
-  key_name   = "${var.project}-myKey-proxy" # Create "myKey" to AWS!!
+  key_name   = "${var.project}-${var.bastion_key_name}-proxy" # Create "myKey" to AWS!!
   public_key = tls_private_key.pk-proxy.public_key_openssh
 
   provisioner "local-exec" { # Create "myKey.pem" to your computer!!
@@ -55,7 +55,7 @@ resource "tls_private_key" "pk" {
 }
 
 resource "aws_key_pair" "kp" {
-  key_name   = var.bastion_key_name # Create "myKey" to AWS!!
+  key_name   = "${var.project}-${var.bastion_key_name}" # Create "myKey" to AWS!!var.bastion_key_name
   public_key = tls_private_key.pk-proxy.public_key_openssh
 
   provisioner "local-exec" { # Create "myKey.pem" to your computer!!
