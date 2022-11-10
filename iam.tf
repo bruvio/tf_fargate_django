@@ -70,7 +70,7 @@ resource "aws_iam_policy" "AppApiCi" {
     "Version" : "2012-10-17",
     "Statement" : [
       {
-        "Sid" : "TerraformRequiredPermissions",
+        "Sid" : "TerraformRequiredPermissions1",
         "Effect" : "Allow",
         "Action" : [
           "ecr:GetAuthorizationToken",
