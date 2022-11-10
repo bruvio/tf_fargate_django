@@ -1,6 +1,6 @@
 resource "aws_s3_bucket" "terraform_state" {
 
-  bucket = var.bucket_name
+  bucket = var.state_bucket
 
   // This is only here so we can destroy the bucket in development. This is not for production
   // usage
