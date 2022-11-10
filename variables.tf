@@ -20,15 +20,15 @@ variable "db_password" {
 variable "bastion_key_name" {
 }
 
-# variable "ecr_image_api" {
-#   description = "ECR Image for API"
+variable "ecr_image_api" {
+  description = "ECR Image for API"
 
-# }
+}
 
-# variable "ecr_image_proxy" {
-#   description = "ECR Image for API"
+variable "ecr_image_proxy" {
+  description = "ECR Image for API"
 
-# }
+}
 
 variable "django_secret_key" {
   description = "Secret key for the Django app"
