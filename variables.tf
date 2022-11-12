@@ -84,3 +84,12 @@ variable "common_tags" {
     ManagedBy   = "Terraform"
   }
 }
+
+variable "cpu"{
+  description = "ECS Fargate task cpu"
+  default = 1024
+}
+variable "memory"{
+  description = "ECS Fargate task cpu"
+  default = 2048
+}
