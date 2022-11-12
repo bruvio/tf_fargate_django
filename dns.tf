@@ -10,7 +10,7 @@ resource "aws_route53_record" "app" {
 
   records = [aws_lb.api.dns_name]
 }
-ma
+
 resource "aws_acm_certificate" "cert" {
   domain_name       = aws_route53_record.app.fqdn
   validation_method = "DNS"
