@@ -3,7 +3,7 @@
 # For a completely new service the entire plan can't be applied straight
 # away, since the ECR repository and version parameters don't yet exist.
 # First these have to selectively be created (via the bootstrap targets).
-
+project = "personal_portfolio"
 TF	= terraform
 TFDIR	= .terraform
 # CONFIG	= backends/$(ENV).backend
@@ -12,8 +12,9 @@ TFDESTROY =  $(TF) apply -destroy -var-file=dev.tfvars
 TFAPPLY = $(TF) apply -no-color
 ENV	= dev
 
+
 # AWS resources requiring bootstrap.
-BOOTSTRAP = aws_ecr_repository.proxy aws_ecr_repository.app aws_s3_bucket.terraform_state  aws_dynamodb_table.terraform_lock
+BOOTSTRAP = module.${project}.aws_ecr_repository.proxy module.${project}.aws_ecr_repository.app module.${project}.aws_s3_bucket.terraform_state  module.${project}.aws_dynamodb_table.terraform_lock
 
 BOOTSTRAP_OPTS = $(addprefix -target=,$(BOOTSTRAP))
 
