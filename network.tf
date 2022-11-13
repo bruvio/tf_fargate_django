@@ -117,7 +117,7 @@ resource "aws_eip" "public_b" {
 }
 
 resource "aws_nat_gateway" "public_b" {
-  count         = var.enable_nat_elastic-ip == true ? 1 : 0
+  count         = var.enable_nat_elastic_ip == true ? 1 : 0
   allocation_id = aws_eip.public_b[0].id
   subnet_id     = aws_subnet.public_b.id
 

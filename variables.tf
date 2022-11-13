@@ -94,7 +94,7 @@ variable "memory" {
   default     = 512
 }
 
-variable "enable_nat_elastic-ip" {
+variable "enable_nat_elastic_ip" {
   description = "boolean to enable NAT Gateways and elastic ips on private subnets"
   default     = false
 }
