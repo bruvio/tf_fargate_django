@@ -27,7 +27,7 @@ resource "aws_iam_instance_profile" "bastion" {
 
 resource "aws_instance" "bastion" {
   ami           = data.aws_ami.amazon_linux.id
-  instance_type = "t2.micro"
+  instance_type = var.bastion_instance
 
   user_data            = file("${path.module}/templates/bastion/user-data.sh")
   iam_instance_profile = aws_iam_instance_profile.bastion.name

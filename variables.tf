@@ -85,11 +85,29 @@ variable "common_tags" {
   }
 }
 
-variable "cpu"{
+variable "cpu" {
   description = "ECS Fargate task cpu"
-  default = 1024
+  default     = 256
 }
-variable "memory"{
+variable "memory" {
   description = "ECS Fargate task cpu"
-  default = 2048
+  default     = 512
+}
+
+variable "enable_nat_elastic-ip" {
+  description = "boolean to enable NAT Gateways and elastic ips on private subnets"
+  default     = false
+}
+
+variable "rds_storage" {
+  default     = 2
+  description = "RDS storage"
+}
+variable "rds_instance" {
+  default     = "db.t2.micro"
+  description = "RDS instance class"
+}
+variable "bastion_instance" {
+  default     = "t2.micro"
+  description = "bastion host EC2 instance class"
 }

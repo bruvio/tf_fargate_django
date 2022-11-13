@@ -54,7 +54,8 @@ resource "aws_route" "public_internet_access_a" {
 }
 
 resource "aws_eip" "public_a" {
-  vpc = true
+  count = var.enable_nat_elastic-ip == true ? 1 : 0
+  vpc   = true
 
   tags = merge(
     var.common_tags,
@@ -63,7 +64,8 @@ resource "aws_eip" "public_a" {
 }
 
 resource "aws_nat_gateway" "public_a" {
-  allocation_id = aws_eip.public_a.id
+  count         = var.enable_nat_elastic-ip == true ? 1 : 0
+  allocation_id = aws_eip.public_a[0].id
   subnet_id     = aws_subnet.public_a.id
 
   tags = merge(
@@ -105,7 +107,8 @@ resource "aws_route" "public_internet_access_b" {
 }
 
 resource "aws_eip" "public_b" {
-  vpc = true
+  count = var.enable_nat_elastic-ip == true ? 1 : 0
+  vpc   = true
 
   tags = merge(
     var.common_tags,
@@ -114,7 +117,8 @@ resource "aws_eip" "public_b" {
 }
 
 resource "aws_nat_gateway" "public_b" {
-  allocation_id = aws_eip.public_b.id
+  count         = var.enable_nat_elastic-ip == true ? 1 : 0
+  allocation_id = aws_eip.public_b[0].id
   subnet_id     = aws_subnet.public_b.id
 
   tags = merge(
@@ -154,7 +158,7 @@ resource "aws_route_table_association" "private_a" {
 
 resource "aws_route" "private_a_internet_out" {
   route_table_id         = aws_route_table.private_a.id
-  nat_gateway_id         = aws_nat_gateway.public_a.id
+  nat_gateway_id         = aws_nat_gateway.public_a[0].id
   destination_cidr_block = "0.0.0.0/0"
 }
 
@@ -185,6 +189,6 @@ resource "aws_route_table_association" "private_b" {
 
 resource "aws_route" "private_b_internet_out" {
   route_table_id         = aws_route_table.private_b.id
-  nat_gateway_id         = aws_nat_gateway.public_b.id
+  nat_gateway_id         = aws_nat_gateway.public_b[0].id
   destination_cidr_block = "0.0.0.0/0"
 }

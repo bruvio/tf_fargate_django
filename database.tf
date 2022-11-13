@@ -32,11 +32,11 @@ resource "aws_security_group" "rds" {
 resource "aws_db_instance" "main" {
   identifier              = "${var.prefix}-db"
   db_name                 = var.db_name
-  allocated_storage       = 20
+  allocated_storage       = var.rds_storage
   storage_type            = "gp2"
   engine                  = "postgres"
   engine_version          = "12.7"
-  instance_class          = "db.t2.micro"
+  instance_class          = var.rds_instance
   db_subnet_group_name    = aws_db_subnet_group.main.name
   password                = var.db_password
   username                = var.db_username
