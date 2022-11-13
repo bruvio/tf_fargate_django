@@ -96,7 +96,7 @@ variable "memory" {
 
 
 variable "rds_storage" {
-  default     = 2
+  default     = 5
   description = "RDS storage"
 }
 variable "rds_instance" {
