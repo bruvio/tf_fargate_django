@@ -8,7 +8,7 @@ TF	= terraform
 TFDIR	= .terraform
 # CONFIG	= backends/$(ENV).backend
 TFPLAN  = $(TF) plan -var-file=$(ENV).tfvars -compact-warnings -no-color
-TFDESTROY =  $(TF) apply -destroy -var-file=dev.tfvars
+TFDESTROY =  $(TF) apply -destroy -var-file=dev.tfvars -auto-approve
 TFAPPLY = $(TF) apply -no-color
 ENV	= dev
 
