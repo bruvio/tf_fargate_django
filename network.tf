@@ -53,26 +53,26 @@ resource "aws_route" "public_internet_access_a" {
   gateway_id             = aws_internet_gateway.main.id
 }
 
-resource "aws_eip" "public_a" {
-  count = var.enable_nat_elastic-ip == true ? 1 : 0
-  vpc   = true
+# resource "aws_eip" "public_a" {
+#   count = var.enable_nat_elastic-ip == true ? 1 : 0
+#   vpc   = true
 
-  tags = merge(
-    var.common_tags,
-    tomap({ "Name" = "${var.prefix}-public-a" })
-  )
-}
+#   tags = merge(
+#     var.common_tags,
+#     tomap({ "Name" = "${var.prefix}-public-a" })
+#   )
+# }
 
-resource "aws_nat_gateway" "public_a" {
-  count         = var.enable_nat_elastic-ip == true ? 1 : 0
-  allocation_id = aws_eip.public_a[0].id
-  subnet_id     = aws_subnet.public_a.id
+# resource "aws_nat_gateway" "public_a" {
+#   count         = var.enable_nat_elastic-ip == true ? 1 : 0
+#   allocation_id = aws_eip.public_a[0].id
+#   subnet_id     = aws_subnet.public_a.id
 
-  tags = merge(
-    var.common_tags,
-    tomap({ "Name" = "${var.prefix}-public-a" })
-  )
-}
+#   tags = merge(
+#     var.common_tags,
+#     tomap({ "Name" = "${var.prefix}-public-a" })
+#   )
+# }
 
 resource "aws_subnet" "public_b" {
   cidr_block              = "10.1.2.0/24"
@@ -106,26 +106,26 @@ resource "aws_route" "public_internet_access_b" {
   gateway_id             = aws_internet_gateway.main.id
 }
 
-resource "aws_eip" "public_b" {
-  count = var.enable_nat_elastic-ip == true ? 1 : 0
-  vpc   = true
+# resource "aws_eip" "public_b" {
+#   count = var.enable_nat_elastic-ip == true ? 1 : 0
+#   vpc   = true
 
-  tags = merge(
-    var.common_tags,
-    tomap({ "Name" = "${var.prefix}-public-b" })
-  )
-}
+#   tags = merge(
+#     var.common_tags,
+#     tomap({ "Name" = "${var.prefix}-public-b" })
+#   )
+# }
 
-resource "aws_nat_gateway" "public_b" {
-  count         = var.enable_nat_elastic_ip == true ? 1 : 0
-  allocation_id = aws_eip.public_b[0].id
-  subnet_id     = aws_subnet.public_b.id
+# resource "aws_nat_gateway" "public_b" {
+#   count         = var.enable_nat_elastic_ip == true ? 1 : 0
+#   allocation_id = aws_eip.public_b[0].id
+#   subnet_id     = aws_subnet.public_b.id
 
-  tags = merge(
-    var.common_tags,
-    tomap({ "Name" = "${var.prefix}-public-b" })
-  )
-}
+#   tags = merge(
+#     var.common_tags,
+#     tomap({ "Name" = "${var.prefix}-public-b" })
+#   )
+# }
 
 
 ##################################################
@@ -156,11 +156,11 @@ resource "aws_route_table_association" "private_a" {
   route_table_id = aws_route_table.private_a.id
 }
 
-resource "aws_route" "private_a_internet_out" {
-  route_table_id         = aws_route_table.private_a.id
-  nat_gateway_id         = aws_nat_gateway.public_a[0].id
-  destination_cidr_block = "0.0.0.0/0"
-}
+# resource "aws_route" "private_a_internet_out" {
+#   route_table_id         = aws_route_table.private_a.id
+#   nat_gateway_id         = aws_nat_gateway.public_a[0].id
+#   destination_cidr_block = "0.0.0.0/0"
+# }
 
 resource "aws_subnet" "private_b" {
   cidr_block        = "10.1.11.0/24"
@@ -187,8 +187,8 @@ resource "aws_route_table_association" "private_b" {
   route_table_id = aws_route_table.private_b.id
 }
 
-resource "aws_route" "private_b_internet_out" {
-  route_table_id         = aws_route_table.private_b.id
-  nat_gateway_id         = aws_nat_gateway.public_b[0].id
-  destination_cidr_block = "0.0.0.0/0"
-}
+# resource "aws_route" "private_b_internet_out" {
+#   route_table_id         = aws_route_table.private_b.id
+#   nat_gateway_id         = aws_nat_gateway.public_b[0].id
+#   destination_cidr_block = "0.0.0.0/0"
+# }
