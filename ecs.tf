@@ -89,10 +89,7 @@ resource "aws_security_group" "ecs_service" {
     from_port = 5432
     to_port   = 5432
     protocol  = "tcp"
-    cidr_blocks = [
-      aws_subnet.private_a.cidr_block,
-      aws_subnet.private_b.cidr_block,
-    ]
+    cidr_blocks = [ for i in aws_subnet.private.*.cidr_block : i]
   }
 
   ingress {
@@ -116,10 +113,7 @@ resource "aws_ecs_service" "api" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets = [
-      aws_subnet.private_a.id,
-      aws_subnet.private_b.id,
-    ]
+    subnets = [ for i in aws_subnet.private.*.id : i]
     security_groups = [aws_security_group.ecs_service.id]
 
   }

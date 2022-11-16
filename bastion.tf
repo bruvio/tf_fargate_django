@@ -32,7 +32,7 @@ resource "aws_instance" "bastion" {
   user_data            = file("${path.module}/templates/bastion/user-data.sh")
   iam_instance_profile = aws_iam_instance_profile.bastion.name
   key_name             = "${var.project}-${var.bastion_key_name}"
-  subnet_id            = aws_subnet.public_a.id
+  subnet_id            = aws_subnet.public.0.id
   vpc_security_group_ids = [
     aws_security_group.bastion.id
   ]
@@ -74,10 +74,7 @@ resource "aws_security_group" "bastion" {
     from_port = 5432
     to_port   = 5432
     protocol  = "tcp"
-    cidr_blocks = [
-      aws_subnet.private_a.cidr_block,
-      aws_subnet.private_b.cidr_block,
-    ]
+    cidr_blocks = [ for i in aws_subnet.private.*.cidr_block : i]
   }
 
   tags = var.common_tags

@@ -1,9 +1,6 @@
 resource "aws_db_subnet_group" "main" {
   name = "${var.prefix}-main"
-  subnet_ids = [
-    aws_subnet.private_a.id,
-    aws_subnet.private_b.id
-  ]
+  subnet_ids = [for i in aws_subnet.private.*.id : i]
 
   tags = merge(
     var.common_tags,

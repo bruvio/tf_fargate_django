@@ -1,10 +1,7 @@
 resource "aws_lb" "api" {
   name               = "${var.prefix}-main"
   load_balancer_type = "application"
-  subnets = [
-    aws_subnet.public_a.id,
-    aws_subnet.public_b.id
-  ]
+  subnets            = [for i in aws_subnet.public.*.id : i]
 
   security_groups = [aws_security_group.lb.id]
 
