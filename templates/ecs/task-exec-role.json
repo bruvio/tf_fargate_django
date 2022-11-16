@@ -9,6 +9,8 @@
                 "ecr:GetDownloadUrlForLayer",
                 "ecr:BatchGetImage",
                 "logs:CreateLogStream",
+                "ecr:GetAuthorizationToken",
+                "logs:CreateLogGroup",
                 "logs:PutLogEvents"
             ],
             "Resource": "*"
