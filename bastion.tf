@@ -74,7 +74,7 @@ resource "aws_security_group" "bastion" {
     from_port   = 5432
     to_port     = 5432
     protocol    = "tcp"
-    cidr_blocks = module.vpc.private_subnets
+    cidr_blocks = module.vpc.private_subnets_cidr_blocks
   }
 
   tags = merge(

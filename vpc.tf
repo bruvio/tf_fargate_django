@@ -30,6 +30,3 @@ resource "aws_service_discovery_private_dns_namespace" "app" {
   vpc         = module.vpc.vpc_id
 }
 
-output "cidr" {
-  value = module.vpc.private_subnets.cidr_blocks
-}
