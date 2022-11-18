@@ -1,7 +1,7 @@
 resource "aws_lb" "api" {
   name               = "${var.prefix}-main"
   load_balancer_type = "application"
-  subnets            = [for i in aws_subnet.public.*.id : i]
+  subnets            = module.vpc.public_subnets
 
   security_groups = [aws_security_group.lb.id]
 
@@ -9,9 +9,10 @@ resource "aws_lb" "api" {
 }
 
 resource "aws_lb_target_group" "api" {
-  name        = "${var.prefix}-api"
-  protocol    = "HTTP"
-  vpc_id      = aws_vpc.main.id
+  name     = "${var.prefix}-api"
+  protocol = "HTTP"
+  vpc_id   = module.vpc.vpc_id
+
   target_type = "ip"
   port        = 8000
 
@@ -52,7 +53,8 @@ resource "aws_lb_listener" "api_https" {
 resource "aws_security_group" "lb" {
   description = "Allow access to Application Load Balancer"
   name        = "${var.prefix}-lb"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = module.vpc.vpc_id
+
 
   ingress {
     protocol    = "tcp"
