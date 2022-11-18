@@ -1,18 +1,18 @@
 output "db_host" {
-  value = module.service_traffic.db_host
+  value = module.this.db_host
 }
 output "bastion_host" {
-  value = module.service_traffic.bastion_host
+  value = module.this.bastion_host
 }
 output "api_endpoint" {
-  value = module.service_traffic.api_endpoint
+  value = module.this.api_endpoint
 }
 output "state-bucket" {
-value = module.service_traffic.state-bucket 
+value = module.this.state-bucket
 }
 
 output "dynamo_db_table" {
-value = module.service_traffic.dynamo_db_table
+value = module.this.dynamo_db_table
 }
 
 output "ecr_image_proxy" {
@@ -23,16 +23,16 @@ output "ecr_image_api" {
 }
 
 output "access-key-proxy-id" {
-  value = module.service_traffic.access-key-proxy-id
+  value = module.this.access-key-proxy-id
 }
 output "access-key-proxy-secret" {
   sensitive = true
-  value = module.service_traffic.access-key-proxy-secret
+  value = module.this.access-key-proxy-secret
 }
 output "access-key-id" {
-  value = module.service_traffic.access-key-id
+  value = module.this.access-key-id
 }
 output "access-key-secret" {
   sensitive = true
-  value = module.service_traffic.access-key-secret
+  value = module.this.access-key-secret
 }
