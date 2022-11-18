@@ -20,7 +20,7 @@ module "vpc" {
 
   tags = merge(
     var.common_tags,
-    tomap({ "Name" = "${var.prefix}-bastion" })
+    tomap({ "Name" = "${var.prefix}-vpc" })
   )
 }
 
@@ -28,4 +28,8 @@ resource "aws_service_discovery_private_dns_namespace" "app" {
   name        = "${var.project}-local"
   description = "${var.project} local zone"
   vpc         = module.vpc.vpc_id
+}
+
+output "cidr" {
+  value = module.vpc.private_subnets.cidr_blocks
 }

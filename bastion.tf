@@ -77,5 +77,8 @@ resource "aws_security_group" "bastion" {
     cidr_blocks = module.vpc.private_subnets
   }
 
-  tags = var.common_tags
+  tags = merge(
+    var.common_tags,
+    tomap({ "Name" = "${var.prefix}-sg-bastion" })
+  )
 }
