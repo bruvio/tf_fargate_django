@@ -101,7 +101,7 @@ resource "aws_security_group" "ecs_service" {
     from_port   = 5432
     to_port     = 5432
     protocol    = "tcp"
-    cidr_blocks = [module.vpc.private_subnets.cidr_blocks]
+    cidr_blocks = [module.vpc.private_subnets]
   }
 
   ingress {
