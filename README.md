@@ -9,7 +9,7 @@ ECR repositories: one for the app and one for the nginx proxy.
 
 S3 buckets: one to use to store remote state and one to store public files used by the app
 
-Core VPC infrastructure: vpc, 2 public subnets, 2 private subnets, internet gateway, loadbalancer, target groups.
+Core VPC infrastructure using terraform module: vpc, 2 public subnets, 2 private subnets, internet gateway, loadbalancer, target groups.
 
 DynamoDB table to store lock state
 
@@ -21,6 +21,7 @@ IAM users (2) to operate with right permission and key pair to ssh into the bast
 
 ECS FARGATE cluster
 
+VPC endpoints to access S3, ECR, KMS
 
 
 

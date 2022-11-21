@@ -107,3 +107,10 @@ variable "bastion_instance" {
   default     = "t2.micro"
   description = "bastion host EC2 instance class"
 }
+variable "az_count" {
+  description = "numbero of availability zones"
+  default     = 2
+}
+variable "vpc_cidr" {
+  default = "10.0.0.0/16"
+} 

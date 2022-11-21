@@ -1,6 +1,6 @@
 [
     {
-        "name": "api",
+        "name": "${name}",
         "image": "${app_image}",
         "essential": true,
         "memoryReservation": 256,
@@ -15,7 +15,8 @@
             {"name": "ADMIN_PASSWORD", "value": "${admin_password}"},
             {"name": "ADMIN", "value": "${admin}"},
             {"name": "S3_STORAGE_BUCKET_NAME", "value": "${s3_storage_bucket_name}"},
-            {"name": "S3_STORAGE_BUCKET_REGION", "value": "${s3_storage_bucket_region}"}
+            {"name": "S3_STORAGE_BUCKET_REGION", "value": "${s3_storage_bucket_region}"},
+            {"name": "SERVICE_DISCOVERY_NAMESPACE_ID", "value": "${service_namespace_id}"}
         ],
         "logConfiguration": {
             "logDriver": "awslogs",

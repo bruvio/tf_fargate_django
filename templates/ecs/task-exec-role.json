@@ -9,9 +9,22 @@
                 "ecr:GetDownloadUrlForLayer",
                 "ecr:BatchGetImage",
                 "logs:CreateLogStream",
+                "ecr:GetAuthorizationToken",
+                "logs:CreateLogGroup",
                 "logs:PutLogEvents"
             ],
             "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ssm:GetParameters",
+                "secretsmanager:GetSecretValue",
+                "kms:Decrypt"
+            ],
+            "Resource": [
+                "*"
+            ]
         }
     ]
 }

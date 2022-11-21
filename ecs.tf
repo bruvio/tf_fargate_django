@@ -3,6 +3,16 @@ resource "aws_ecs_cluster" "main" {
 
   tags = var.common_tags
 }
+
+locals {
+  aws_account_id       = data.aws_caller_identity.current.account_id
+  service_namespace_id = aws_service_discovery_private_dns_namespace.app.id
+
+}
+
+
+
+
 resource "aws_iam_policy" "task_execution_role_policy" {
   name        = "${var.prefix}-task-exec-role-policy"
   path        = "/"
@@ -37,6 +47,7 @@ data "template_file" "api_container_definitions" {
   template = file("${path.module}/templates/ecs/container-definitions.json.tpl")
 
   vars = {
+    name                     = var.project
     app_image                = var.ecr_image_api
     proxy_image              = var.ecr_image_proxy
     django_secret_key        = var.django_secret_key
@@ -52,6 +63,7 @@ data "template_file" "api_container_definitions" {
     allowed_hosts            = aws_route53_record.app.fqdn
     s3_storage_bucket_name   = aws_s3_bucket.app_public_files.bucket
     s3_storage_bucket_region = var.region
+    service_namespace_id     = local.service_namespace_id
 
   }
 }
@@ -76,7 +88,7 @@ resource "aws_ecs_task_definition" "api" {
 resource "aws_security_group" "ecs_service" {
   description = "Access for the ECS service"
   name        = "${var.prefix}-ecs-service"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = module.vpc.vpc_id
 
   egress {
     from_port   = 443
@@ -86,13 +98,10 @@ resource "aws_security_group" "ecs_service" {
   }
 
   egress {
-    from_port = 5432
-    to_port   = 5432
-    protocol  = "tcp"
-    cidr_blocks = [
-      aws_subnet.private_a.cidr_block,
-      aws_subnet.private_b.cidr_block,
-    ]
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = module.vpc.private_subnets_cidr_blocks
   }
 
   ingress {
@@ -116,10 +125,7 @@ resource "aws_ecs_service" "api" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets = [
-      aws_subnet.private_a.id,
-      aws_subnet.private_b.id,
-    ]
+    subnets         = module.vpc.private_subnets
     security_groups = [aws_security_group.ecs_service.id]
 
   }
@@ -149,4 +155,29 @@ resource "aws_iam_policy" "ecs_s3_access" {
 resource "aws_iam_role_policy_attachment" "ecs_s3_access" {
   role       = aws_iam_role.app_iam_role.name
   policy_arn = aws_iam_policy.ecs_s3_access.arn
+}
+
+
+resource "aws_service_discovery_service" "app_service" {
+  name = var.project
+
+  dns_config {
+    namespace_id = local.service_namespace_id
+
+    dns_records {
+      ttl  = 10
+      type = "A"
+    }
+
+    dns_records {
+      ttl  = 10
+      type = "SRV"
+    }
+
+    routing_policy = "MULTIVALUE"
+  }
+
+  health_check_custom_config {
+    failure_threshold = 1
+  }
 }
