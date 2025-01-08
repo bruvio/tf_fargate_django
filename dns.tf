@@ -4,9 +4,10 @@ data "aws_route53_zone" "zone" {
 
 resource "aws_route53_record" "app" {
   zone_id = data.aws_route53_zone.zone.zone_id
-  name    = "${var.prefix}.${lookup(var.subdomain, terraform.workspace)}.${data.aws_route53_zone.zone.name}"
-  type    = "CNAME"
-  ttl     = "300"
+  name    = "${var.prefix}${var.env == "prod" ? "" : ".${lookup(var.subdomain, var.env, var.subdomain.default)}"}.${data.aws_route53_zone.zone.name}"
+
+  type = "CNAME"
+  ttl  = "300"
 
   records = [aws_lb.api.dns_name]
 }
