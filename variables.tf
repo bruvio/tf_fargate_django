@@ -100,7 +100,7 @@ variable "rds_storage" {
   description = "RDS storage"
 }
 variable "rds_instance" {
-  default     = "db.t2.micro"
+  default     = "db.m5.large"
   description = "RDS instance class"
 }
 variable "bastion_instance" {
