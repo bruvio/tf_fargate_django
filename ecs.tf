@@ -1,90 +1,253 @@
+# ----------------------------
+# ECS Cluster
+# ----------------------------
 resource "aws_ecs_cluster" "main" {
   name = "${var.prefix}-cluster"
 
   tags = var.common_tags
 }
 
+# ----------------------------
+# Locals
+# ----------------------------
 locals {
   aws_account_id       = data.aws_caller_identity.current.account_id
   service_namespace_id = aws_service_discovery_private_dns_namespace.app.id
-
 }
 
+# ----------------------------
+# IAM Policies and Roles
+# ----------------------------
 
-
-
+## Task Execution Role Policy
 resource "aws_iam_policy" "task_execution_role_policy" {
   name        = "${var.prefix}-task-exec-role-policy"
   path        = "/"
   description = "Allow retrieving images and adding to logs"
-  policy      = file("${path.module}/templates/ecs/task-exec-role.json")
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ecr:GetAuthorizationToken",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchGetImage",
+          "logs:CreateLogStream",
+          "logs:CreateLogGroup",
+          "logs:PutLogEvents"
+        ]
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "ssm:GetParameters",
+          "secretsmanager:GetSecretValue",
+          "kms:Decrypt"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
 }
 
+## Task Execution Role
 resource "aws_iam_role" "task_execution_role" {
-  name               = "${var.prefix}-task-exec-role"
-  assume_role_policy = file("${path.module}/templates/ecs/assume-role-policy.json")
+  name = "${var.prefix}-task-exec-role"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Principal = {
+          Service = ["ecs.amazonaws.com", "ecs-tasks.amazonaws.com"]
+        }
+        Effect = "Allow"
+      }
+    ]
+  })
 }
-# permission that the task needs to start a new container
-resource "aws_iam_role_policy_attachment" "task_execution_role" {
+
+## Attach Task Execution Policy to Role
+resource "aws_iam_role_policy_attachment" "task_execution_role_attachment" {
   role       = aws_iam_role.task_execution_role.name
   policy_arn = aws_iam_policy.task_execution_role_policy.arn
 }
-# role given to the running task: contains permission of the task at run time
+
+## App IAM Role
 resource "aws_iam_role" "app_iam_role" {
-  name               = "${var.prefix}-api-task"
-  assume_role_policy = file("${path.module}/templates/ecs/assume-role-policy.json")
+  name = "${var.prefix}-api-task"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Principal = {
+          Service = ["ecs.amazonaws.com", "ecs-tasks.amazonaws.com"]
+        }
+        Effect = "Allow"
+      }
+    ]
+  })
 
   tags = var.common_tags
 }
 
+## S3 Access Policy
+resource "aws_iam_policy" "ecs_s3_access" {
+  name        = "${var.prefix}-AppS3AccessPolicy"
+  path        = "/"
+  description = "Allow access to the traffic app S3 bucket"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:PutObject",
+          "s3:GetObjectAcl",
+          "s3:GetObject",
+          "s3:ListBucket",
+          "s3:DeleteObject",
+          "s3:PutObjectAcl"
+        ]
+        Resource = [
+          "${aws_s3_bucket.app_public_files.arn}/*",
+          "${aws_s3_bucket.app_public_files.arn}"
+        ]
+      }
+    ]
+  })
+}
+
+## Attach S3 Access Policy to App IAM Role
+resource "aws_iam_role_policy_attachment" "ecs_s3_access_attachment" {
+  role       = aws_iam_role.app_iam_role.name
+  policy_arn = aws_iam_policy.ecs_s3_access.arn
+}
+
+# ----------------------------
+# CloudWatch Log Group
+# ----------------------------
 resource "aws_cloudwatch_log_group" "ecs_task_logs" {
   name = "${var.prefix}-api"
   tags = var.common_tags
 }
 
-
-data "template_file" "api_container_definitions" {
-  template = file("${path.module}/templates/ecs/container-definitions.json.tpl")
-
-  vars = {
-    name                     = var.project
-    app_image                = var.ecr_image_api
-    proxy_image              = var.ecr_image_proxy
-    django_secret_key        = var.django_secret_key
-    admin                    = var.admin
-    admin_password           = var.admin_password
-    admin_email              = var.admin_email
-    db_host                  = aws_db_instance.main.address
-    db_name                  = aws_db_instance.main.name
-    db_user                  = aws_db_instance.main.username
-    db_pass                  = aws_db_instance.main.password
-    log_group_name           = aws_cloudwatch_log_group.ecs_task_logs.name
-    log_group_region         = var.region
-    allowed_hosts            = aws_route53_record.app.fqdn
-    s3_storage_bucket_name   = aws_s3_bucket.app_public_files.bucket
-    s3_storage_bucket_region = var.region
-    service_namespace_id     = local.service_namespace_id
-
-  }
-}
-
+# ----------------------------
+# ECS Task Definition
+# ----------------------------
 resource "aws_ecs_task_definition" "api" {
   family                   = "${var.prefix}-api"
-  container_definitions    = data.template_file.api_container_definitions.rendered
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = var.cpu
   memory                   = var.memory
   execution_role_arn       = aws_iam_role.task_execution_role.arn
   task_role_arn            = aws_iam_role.app_iam_role.arn
+
+  container_definitions = jsonencode([
+    {
+      name              = var.project
+      image             = var.ecr_image_api
+      essential         = true
+      memoryReservation = 256
+      environment = [
+        { name = "DJANGO_SECRET_KEY", value = var.django_secret_key },
+        { name = "DB_HOST", value = aws_db_instance.main.address },
+        { name = "DB_NAME", value = aws_db_instance.main.db_name },
+        { name = "DB_USER", value = aws_db_instance.main.username },
+        { name = "DB_PASS", value = aws_db_instance.main.password },
+        { name = "ALLOWED_HOSTS", value = aws_route53_record.app.fqdn },
+        { name = "ADMIN_EMAIL", value = var.admin_email },
+        { name = "ADMIN_PASSWORD", value = var.admin_password },
+        { name = "ADMIN", value = var.admin },
+        { name = "S3_STORAGE_BUCKET_NAME", value = aws_s3_bucket.app_public_files.bucket },
+        { name = "S3_STORAGE_BUCKET_REGION", value = var.region },
+        { name = "SERVICE_DISCOVERY_NAMESPACE_ID", value = local.service_namespace_id }
+      ]
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          "awslogs-group"         = aws_cloudwatch_log_group.ecs_task_logs.name
+          "awslogs-region"        = var.region
+          "awslogs-stream-prefix" = "api"
+        }
+      }
+      portMappings = [
+        {
+          containerPort = 9000
+          hostPort      = 9000
+          protocol      = "tcp"
+        }
+      ]
+      mountPoints = [
+        {
+          readOnly      = false
+          containerPath = "/vol/web"
+          sourceVolume  = "static"
+        }
+      ]
+    },
+    {
+      name              = "proxy"
+      image             = var.ecr_image_proxy
+      essential         = true
+      memoryReservation = 256
+      environment = [
+        { name = "APP_HOST", value = "127.0.0.1" },
+        { name = "APP_PORT", value = "9000" },
+        { name = "LISTEN_PORT", value = "8000" }
+      ]
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          "awslogs-group"         = aws_cloudwatch_log_group.ecs_task_logs.name
+          "awslogs-region"        = var.region
+          "awslogs-stream-prefix" = "proxy"
+        }
+      }
+      portMappings = [
+        {
+          containerPort = 8000
+          hostPort      = 8000
+          protocol      = "tcp"
+        }
+      ]
+      mountPoints = [
+        {
+          readOnly      = true
+          containerPath = "/vol/static"
+          sourceVolume  = "static"
+        }
+      ]
+    }
+  ])
+
   volume {
     name = "static"
+
+    # efs_volume_configuration {
+    #   file_system_id       = aws_efs_file_system.static.id
+    #   root_directory       = "/static"
+    #   transit_encryption   = "ENABLED"
+    #   authorization_config = {
+    #     access_point_id = aws_efs_access_point.static.id
+    #     iam             = "ENABLED"
+    #   }
+    # }
   }
 
   tags = var.common_tags
 }
 
-
+# ----------------------------
+# Security Group for ECS Service
+# ----------------------------
 resource "aws_security_group" "ecs_service" {
   description = "Access for the ECS service"
   name        = "${var.prefix}-ecs-service"
@@ -105,59 +268,45 @@ resource "aws_security_group" "ecs_service" {
   }
 
   ingress {
-    from_port = 8000
-    to_port   = 8000
-    protocol  = "tcp"
-    security_groups = [
-      aws_security_group.lb.id
-    ]
-
+    from_port       = 8000
+    to_port         = 8000
+    protocol        = "tcp"
+    security_groups = [aws_security_group.lb.id]
   }
 
   tags = var.common_tags
 }
 
+# ----------------------------
+# ECS Service
+# ----------------------------
 resource "aws_ecs_service" "api" {
   name            = "${var.prefix}-api"
   cluster         = aws_ecs_cluster.main.name
-  task_definition = aws_ecs_task_definition.api.family
+  task_definition = aws_ecs_task_definition.api.arn
   desired_count   = 1
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets         = module.vpc.private_subnets
-    security_groups = [aws_security_group.ecs_service.id]
-
+    subnets          = module.vpc.private_subnets
+    security_groups  = [aws_security_group.ecs_service.id]
+    assign_public_ip = false # Typically false for Fargate in private subnets
   }
+
   load_balancer {
     target_group_arn = aws_lb_target_group.api.arn
     container_name   = "proxy"
     container_port   = 8000
   }
+
   depends_on = [aws_lb_listener.api_https]
-}
-data "template_file" "ecs_s3_write_policy" {
-  template = file("${path.module}/templates/ecs/s3-write-policy.json.tpl")
 
-  vars = {
-    bucket_arn = aws_s3_bucket.app_public_files.arn
-  }
+  tags = var.common_tags
 }
 
-resource "aws_iam_policy" "ecs_s3_access" {
-  name        = "${var.prefix}-AppS3AccessPolicy"
-  path        = "/"
-  description = "Allow access to the traffic app S3 bucket"
-
-  policy = data.template_file.ecs_s3_write_policy.rendered
-}
-
-resource "aws_iam_role_policy_attachment" "ecs_s3_access" {
-  role       = aws_iam_role.app_iam_role.name
-  policy_arn = aws_iam_policy.ecs_s3_access.arn
-}
-
-
+# ----------------------------
+# Service Discovery
+# ----------------------------
 resource "aws_service_discovery_service" "app_service" {
   name = var.project
 
@@ -180,4 +329,7 @@ resource "aws_service_discovery_service" "app_service" {
   health_check_custom_config {
     failure_threshold = 1
   }
+
+  tags = var.common_tags
 }
+
