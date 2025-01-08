@@ -51,7 +51,7 @@ resource "aws_iam_policy" "AppApiCi-proxy" {
         "Action" : [
           "ecr:*"
         ],
-        "Resource" : "arn:aws:ecr:us-east-1:*:repository/${var.ecr_image_api}"
+        "Resource" : "arn:aws:ecr:${var.region}:*:repository/${var.ecr_image_api}"
       },
       {
         "Effect" : "Allow",
@@ -75,7 +75,7 @@ resource "aws_iam_policy" "AppApiCi" {
         "Action" : [
           "ecr:*"
         ],
-        "Resource" : "arn:aws:ecr:us-east-1:*:repository/${var.ecr_image_api}"
+        "Resource" : "arn:aws:ecr:${var.region}:*:repository/${var.ecr_image_api}"
       },
       {
         "Effect" : "Allow",
@@ -125,7 +125,7 @@ resource "aws_iam_policy" "AppApiCi" {
         "Action" : [
           "ecr:*"
         ],
-        "Resource" : "arn:aws:ecr:us-east-1:*:repository/${var.ecr_image_api}"
+        "Resource" : "arn:aws:ecr:${var.region}:*:repository/${var.ecr_image_api}"
       },
       {
         "Sid" : "AllowStateLockingAccess",
