@@ -196,7 +196,7 @@ resource "aws_ecs_task_definition" "api" {
       essential         = true
       memoryReservation = 256
       environment = [
-        { name = "APP_HOST", value = "127.0.0.1" },
+        { name = "APP_HOST", value = "${var.project}-api" }, # Use ECS service name or DNS
         { name = "APP_PORT", value = "9000" },
         { name = "LISTEN_PORT", value = "8000" },
         { name = "S3_STORAGE_BUCKET_NAME", value = aws_s3_bucket.app_public_files.bucket },
@@ -249,8 +249,8 @@ resource "aws_security_group" "ecs_service" {
   }
 
   ingress {
-    from_port       = 8000
-    to_port         = 8000
+    from_port       = 9000
+    to_port         = 9000
     protocol        = "tcp"
     security_groups = [aws_security_group.lb.id]
   }
