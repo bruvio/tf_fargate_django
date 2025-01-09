@@ -196,7 +196,7 @@ resource "aws_ecs_task_definition" "api" {
       essential         = true
       memoryReservation = 256
       environment = [
-        { name = "APP_HOST", value = "${var.project}-api" }, # Use ECS service name or DNS
+        { name = "APP_HOST", value = "${var.project}" }, # Use ECS service name or DNS
         { name = "APP_PORT", value = "9000" },
         { name = "LISTEN_PORT", value = "8000" },
         { name = "S3_STORAGE_BUCKET_NAME", value = aws_s3_bucket.app_public_files.bucket },
