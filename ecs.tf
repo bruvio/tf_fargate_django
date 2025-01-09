@@ -171,6 +171,7 @@ resource "aws_ecs_task_definition" "api" {
         { name = "SERVICE_DISCOVERY_NAMESPACE_ID", value = local.service_namespace_id },
         { name = "SYSTEM_ENV", value = "PRODUCTION" },
         { name = "DEBUG", value = "0" }
+        { name = "S3_STORAGE_BACKEND", value = "1" }
       ]
       logConfiguration = {
         logDriver = "awslogs"
