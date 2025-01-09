@@ -198,7 +198,9 @@ resource "aws_ecs_task_definition" "api" {
       environment = [
         { name = "APP_HOST", value = "127.0.0.1" },
         { name = "APP_PORT", value = "9000" },
-        { name = "LISTEN_PORT", value = "8000" }
+        { name = "LISTEN_PORT", value = "8000" },
+        { name = "S3_STORAGE_BUCKET_NAME", value = aws_s3_bucket.app_public_files.bucket },
+        { name = "S3_STORAGE_BUCKET_REGION", value = var.region },
       ]
       logConfiguration = {
         logDriver = "awslogs"
