@@ -145,61 +145,9 @@ variable "disable_versioning" {
   default     = false
 }
 
-# Variable for enabling secure transport policy
-variable "enable_ssl" {
-  description = "Enable or disable secure transport policy."
-  type        = bool
-  default     = true
-}
-
-variable "allow_read" {
-  description = "Resources that are allow to read objects."
-  type        = list(string)
-  default     = []
-}
-
-variable "allow_write" {
-  description = "Resources that are allow to write to the bucket."
-  type        = list(string)
-  default     = []
-}
 
 
-variable "tags" {
-  description = "bucket tags"
-  type        = map(any)
-}
 
-variable "lifecycle_rule" {
-  description = "List of maps containing configuration of object lifecycle management."
-  type        = any
-  default     = []
-}
-
-
-variable "intelligent_tiering" {
-  description = "Map containing intelligent tiering configuration."
-  type        = any
-  default     = {}
-}
-
-variable "expected_bucket_owner" {
-  description = "The account ID of the expected bucket owner"
-  type        = string
-  default     = null
-}
-
-variable "logging" {
-  description = "Map containing access bucket logging configuration."
-  type        = any
-  default     = {}
-}
-
-variable "acl" {
-  description = "(Optional) The canned ACL to apply. Conflicts with `grant`"
-  type        = string
-  default     = null
-}
 variable "force_destroy" {
   description = "(Optional, Default:false ) A boolean that indicates all objects should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable."
   type        = bool
