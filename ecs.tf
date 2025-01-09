@@ -168,15 +168,16 @@ resource "aws_ecs_task_definition" "api" {
         { name = "ADMIN", value = var.admin },
         { name = "S3_STORAGE_BUCKET_NAME", value = aws_s3_bucket.app_public_files.bucket },
         { name = "S3_STORAGE_BUCKET_REGION", value = var.region },
-        { name = "SERVICE_DISCOVERY_NAMESPACE_ID", value = local.service_namespace_id }
+        { name = "SERVICE_DISCOVERY_NAMESPACE_ID", value = local.service_namespace_id },
+        { name = "SYSTEM_ENV", value = "PRODUCTION" },
+        { name = "DEBUG", value = "0" }
       ]
       logConfiguration = {
         logDriver = "awslogs"
         options = {
-          "awslogs-group"  = aws_cloudwatch_log_group.ecs_task_logs.name
-          "awslogs-region" = var.region
-          "awslogs-stream-prefix" : "${var.project}"
-          # "awslogs-stream-project" = "api"
+          "awslogs-group"         = aws_cloudwatch_log_group.ecs_task_logs.name
+          "awslogs-region"        = var.region
+          "awslogs-stream-prefix" = "${var.project}"
         }
       }
       portMappings = [
@@ -186,13 +187,7 @@ resource "aws_ecs_task_definition" "api" {
           protocol      = "tcp"
         }
       ]
-      mountPoints = [
-        {
-          readOnly      = false
-          containerPath = "/vol/static"
-          sourceVolume  = "static"
-        }
-      ]
+
     },
     {
       name              = "proxy"
@@ -207,10 +202,9 @@ resource "aws_ecs_task_definition" "api" {
       logConfiguration = {
         logDriver = "awslogs"
         options = {
-          "awslogs-group"  = aws_cloudwatch_log_group.ecs_task_logs.name
-          "awslogs-region" = var.region
-          "awslogs-stream-prefix" : "proxy"
-          # "awslogs-stream-project" = "proxy"
+          "awslogs-group"         = aws_cloudwatch_log_group.ecs_task_logs.name
+          "awslogs-region"        = var.region
+          "awslogs-stream-prefix" = "proxy"
         }
       }
       portMappings = [
@@ -220,29 +214,11 @@ resource "aws_ecs_task_definition" "api" {
           protocol      = "tcp"
         }
       ]
-      mountPoints = [
-        {
-          readOnly      = false
-          containerPath = "/vol/static"
-          sourceVolume  = "static"
-        }
-      ]
+
     }
   ])
 
-  volume {
-    name = "static"
 
-    # efs_volume_configuration {
-    #   file_system_id       = aws_efs_file_system.static.id
-    #   root_directory       = "/static"
-    #   transit_encryption   = "ENABLED"
-    #   authorization_config = {
-    #     access_point_id = aws_efs_access_point.static.id
-    #     iam             = "ENABLED"
-    #   }
-    # }
-  }
 
   tags = var.common_tags
 }
