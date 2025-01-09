@@ -1,5 +1,5 @@
 resource "aws_lb" "api" {
-  name               = "${var.prefix}-main"
+  name               = "${var.project}-main"
   load_balancer_type = "application"
   subnets            = module.vpc.public_subnets
 
@@ -9,7 +9,7 @@ resource "aws_lb" "api" {
 }
 
 resource "aws_lb_target_group" "api" {
-  name     = "${var.prefix}-api"
+  name     = "${var.project}-api"
   protocol = "HTTP"
   vpc_id   = module.vpc.vpc_id
 
@@ -52,7 +52,7 @@ resource "aws_lb_listener" "api_https" {
 
 resource "aws_security_group" "lb" {
   description = "Allow access to Application Load Balancer"
-  name        = "${var.prefix}-lb"
+  name        = "${var.project}-lb"
   vpc_id      = module.vpc.vpc_id
 
 

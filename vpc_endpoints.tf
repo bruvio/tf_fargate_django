@@ -2,7 +2,7 @@
 # VPC Endpoint Security Group
 
 resource "aws_security_group" "vpc_endpoint" {
-  name   = "${local.prefix}-vpce-sg"
+  name   = "${var.project}-vpce-sg"
   vpc_id = module.vpc.vpc_id
   ingress {
     from_port   = 443
@@ -12,7 +12,7 @@ resource "aws_security_group" "vpc_endpoint" {
   }
   tags = merge(
     var.common_tags,
-    tomap({ "Name" = "${var.prefix}-sg-vpc-endpoint" })
+    tomap({ "Name" = "${var.project}-sg-vpc-endpoint" })
   )
 
 }
@@ -26,7 +26,7 @@ resource "aws_vpc_endpoint" "s3" {
   route_table_ids   = module.vpc.private_route_table_ids
   tags = merge(
     var.common_tags,
-    tomap({ "Name" = "${var.prefix}-s3-endpoint" })
+    tomap({ "Name" = "${var.project}-s3-endpoint" })
   )
 
 }
@@ -42,7 +42,7 @@ resource "aws_vpc_endpoint" "dkr" {
   subnet_ids = module.vpc.private_subnets
   tags = merge(
     var.common_tags,
-    tomap({ "Name" = "${var.prefix}-dkr-endpoint" })
+    tomap({ "Name" = "${var.project}-dkr-endpoint" })
   )
 
 }
@@ -58,7 +58,7 @@ resource "aws_vpc_endpoint" "dkr_api" {
   subnet_ids = module.vpc.private_subnets
   tags = merge(
     var.common_tags,
-    tomap({ "Name" = "${var.prefix}-dkr-api-endpoint" })
+    tomap({ "Name" = "${var.project}-dkr-api-endpoint" })
   )
 
 }
@@ -75,7 +75,7 @@ resource "aws_vpc_endpoint" "logs" {
   subnet_ids = module.vpc.private_subnets
   tags = merge(
     var.common_tags,
-    tomap({ "Name" = "${var.prefix}-logs-endpoint" })
+    tomap({ "Name" = "${var.project}-logs-endpoint" })
   )
 
 }
@@ -92,7 +92,7 @@ resource "aws_vpc_endpoint" "secretsmanager" {
   subnet_ids = module.vpc.private_subnets
   tags = merge(
     var.common_tags,
-    tomap({ "Name" = "${var.prefix}-secretsmanager-endpoint" })
+    tomap({ "Name" = "${var.project}-secretsmanager-endpoint" })
   )
 
 }
@@ -109,7 +109,7 @@ resource "aws_vpc_endpoint" "ssm" {
   subnet_ids = module.vpc.private_subnets
   tags = merge(
     var.common_tags,
-    tomap({ "Name" = "${var.prefix}-ssm-endpoint" })
+    tomap({ "Name" = "${var.project}-ssm-endpoint" })
   )
 
 }
@@ -126,7 +126,7 @@ resource "aws_vpc_endpoint" "kms" {
   subnet_ids = module.vpc.private_subnets
   tags = merge(
     var.common_tags,
-    tomap({ "Name" = "${var.prefix}-kms-endpoint" })
+    tomap({ "Name" = "${var.project}-kms-endpoint" })
   )
 
 }

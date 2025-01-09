@@ -20,7 +20,7 @@ module "vpc" {
 
   tags = merge(
     var.common_tags,
-    tomap({ "Name" = "${var.prefix}-vpc" })
+    tomap({ "Name" = "${var.project}-vpc" })
   )
 }
 

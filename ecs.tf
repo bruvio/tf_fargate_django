@@ -2,7 +2,7 @@
 # ECS Cluster
 # ----------------------------
 resource "aws_ecs_cluster" "main" {
-  name = "${var.prefix}-cluster"
+  name = "${var.project}-cluster"
 
   tags = var.common_tags
 }
@@ -21,7 +21,7 @@ locals {
 
 ## Task Execution Role Policy
 resource "aws_iam_policy" "task_execution_role_policy" {
-  name        = "${var.prefix}-task-exec-role-policy"
+  name        = "${var.project}-task-exec-role-policy"
   path        = "/"
   description = "Allow retrieving images and adding to logs"
 
@@ -56,7 +56,7 @@ resource "aws_iam_policy" "task_execution_role_policy" {
 
 ## Task Execution Role
 resource "aws_iam_role" "task_execution_role" {
-  name = "${var.prefix}-task-exec-role"
+  name = "${var.project}-task-exec-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -79,7 +79,7 @@ resource "aws_iam_role_policy_attachment" "task_execution_role_attachment" {
 
 ## App IAM Role
 resource "aws_iam_role" "app_iam_role" {
-  name = "${var.prefix}-api-task"
+  name = "${var.project}-api-task"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -98,7 +98,7 @@ resource "aws_iam_role" "app_iam_role" {
 
 ## S3 Access Policy
 resource "aws_iam_policy" "ecs_s3_access" {
-  name        = "${var.prefix}-AppS3AccessPolicy"
+  name        = "${var.project}-AppS3AccessPolicy"
   path        = "/"
   description = "Allow access to the traffic app S3 bucket"
 
@@ -134,7 +134,7 @@ resource "aws_iam_role_policy_attachment" "ecs_s3_access_attachment" {
 # CloudWatch Log Group
 # ----------------------------
 resource "aws_cloudwatch_log_group" "ecs_task_logs" {
-  name = "${var.prefix}-api"
+  name = "${var.project}-api"
   tags = var.common_tags
 }
 
@@ -142,7 +142,7 @@ resource "aws_cloudwatch_log_group" "ecs_task_logs" {
 # ECS Task Definition
 # ----------------------------
 resource "aws_ecs_task_definition" "api" {
-  family                   = "${var.prefix}-api"
+  family                   = "${var.project}-api"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = var.cpu
@@ -173,9 +173,9 @@ resource "aws_ecs_task_definition" "api" {
       logConfiguration = {
         logDriver = "awslogs"
         options = {
-          "awslogs-group"         = aws_cloudwatch_log_group.ecs_task_logs.name
-          "awslogs-region"        = var.region
-          "awslogs-stream-prefix" = "api"
+          "awslogs-group"          = aws_cloudwatch_log_group.ecs_task_logs.name
+          "awslogs-region"         = var.region
+          "awslogs-stream-project" = "api"
         }
       }
       portMappings = [
@@ -206,9 +206,9 @@ resource "aws_ecs_task_definition" "api" {
       logConfiguration = {
         logDriver = "awslogs"
         options = {
-          "awslogs-group"         = aws_cloudwatch_log_group.ecs_task_logs.name
-          "awslogs-region"        = var.region
-          "awslogs-stream-prefix" = "proxy"
+          "awslogs-group"          = aws_cloudwatch_log_group.ecs_task_logs.name
+          "awslogs-region"         = var.region
+          "awslogs-stream-project" = "proxy"
         }
       }
       portMappings = [
@@ -250,7 +250,7 @@ resource "aws_ecs_task_definition" "api" {
 # ----------------------------
 resource "aws_security_group" "ecs_service" {
   description = "Access for the ECS service"
-  name        = "${var.prefix}-ecs-service"
+  name        = "${var.project}-ecs-service"
   vpc_id      = module.vpc.vpc_id
 
   egress {
@@ -281,7 +281,7 @@ resource "aws_security_group" "ecs_service" {
 # ECS Service
 # ----------------------------
 resource "aws_ecs_service" "api" {
-  name            = "${var.prefix}-api"
+  name            = "${var.project}-api"
   cluster         = aws_ecs_cluster.main.name
   task_definition = aws_ecs_task_definition.api.arn
   desired_count   = 1

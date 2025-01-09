@@ -1,16 +1,16 @@
 resource "aws_db_subnet_group" "main" {
-  name       = "${var.prefix}-main"
+  name       = "${var.project}-main"
   subnet_ids = module.vpc.private_subnets
 
   tags = merge(
     var.common_tags,
-    tomap({ "Name" = "${var.prefix}-main" })
+    tomap({ "Name" = "${var.project}-main" })
   )
 }
 
 resource "aws_security_group" "rds" {
   description = "Allow access to the RDS database instance."
-  name        = "${var.prefix}-rds-inbound-access"
+  name        = "${var.project}-rds-inbound-access"
   vpc_id      = module.vpc.vpc_id
 
   ingress {
@@ -27,7 +27,7 @@ resource "aws_security_group" "rds" {
 }
 
 resource "aws_db_instance" "main" {
-  identifier                 = "${var.prefix}-db"
+  identifier                 = "${var.project}-db"
   db_name                    = var.db_name
   auto_minor_version_upgrade = true
   allocated_storage          = var.rds_storage
@@ -45,6 +45,6 @@ resource "aws_db_instance" "main" {
 
   tags = merge(
     var.common_tags,
-    tomap({ "Name" = "${var.prefix}-main" })
+    tomap({ "Name" = "${var.project}-main" })
   )
 }

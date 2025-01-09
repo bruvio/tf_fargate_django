@@ -5,7 +5,7 @@
 
 #   tags = merge(
 #     var.common_tags,
-#     tomap({ "Name" = "${var.prefix}-vpc" })
+#     tomap({ "Name" = "${var.project}-vpc" })
 #   )
 # }
 
@@ -14,7 +14,7 @@
 
 #   tags = merge(
 #     var.common_tags,
-#     tomap({ "Name" = "${var.prefix}-main" })
+#     tomap({ "Name" = "${var.project}-main" })
 
 #   )
 # }
@@ -29,7 +29,7 @@
 
 #   tags = merge(
 #     var.common_tags,
-#     tomap({ "Name" = "${var.prefix}-public-a" })
+#     tomap({ "Name" = "${var.project}-public-a" })
 #   )
 # }
 
@@ -38,7 +38,7 @@
 
 #   tags = merge(
 #     var.common_tags,
-#     tomap({ "Name" = "${var.prefix}-public-a" })
+#     tomap({ "Name" = "${var.project}-public-a" })
 #   )
 # }
 
@@ -58,7 +58,7 @@
 
 #   tags = merge(
 #     var.common_tags,
-#     tomap({ "Name" = "${var.prefix}-public-a" })
+#     tomap({ "Name" = "${var.project}-public-a" })
 #   )
 # }
 
@@ -68,7 +68,7 @@
 
 #   tags = merge(
 #     var.common_tags,
-#     tomap({ "Name" = "${var.prefix}-public-a" })
+#     tomap({ "Name" = "${var.project}-public-a" })
 #   )
 # }
 
@@ -80,7 +80,7 @@
 
 #   tags = merge(
 #     var.common_tags,
-#     tomap({ "Name" = "${var.prefix}-public-b" })
+#     tomap({ "Name" = "${var.project}-public-b" })
 #   )
 # }
 
@@ -89,7 +89,7 @@
 
 #   tags = merge(
 #     var.common_tags,
-#     tomap({ "Name" = "${var.prefix}-public-b" })
+#     tomap({ "Name" = "${var.project}-public-b" })
 #   )
 # }
 
@@ -109,7 +109,7 @@
 
 #   tags = merge(
 #     var.common_tags,
-#     tomap({ "Name" = "${var.prefix}-public-b" })
+#     tomap({ "Name" = "${var.project}-public-b" })
 #   )
 # }
 
@@ -119,7 +119,7 @@
 
 #   tags = merge(
 #     var.common_tags,
-#     tomap({ "Name" = "${var.prefix}-public-b" })
+#     tomap({ "Name" = "${var.project}-public-b" })
 #   )
 # }
 
@@ -134,7 +134,7 @@
 
 #   tags = merge(
 #     var.common_tags,
-#     tomap({ "Name" = "${var.prefix}-private-a" })
+#     tomap({ "Name" = "${var.project}-private-a" })
 #   )
 # }
 
@@ -143,7 +143,7 @@
 
 #   tags = merge(
 #     var.common_tags,
-#     tomap({ "Name" = "${var.prefix}-private-a" })
+#     tomap({ "Name" = "${var.project}-private-a" })
 #   )
 # }
 
@@ -165,7 +165,7 @@
 
 #   tags = merge(
 #     var.common_tags,
-#     tomap({ "Name" = "${var.prefix}-private-b" })
+#     tomap({ "Name" = "${var.project}-private-b" })
 #   )
 # }
 
@@ -174,7 +174,7 @@
 
 #   tags = merge(
 #     var.common_tags,
-#     tomap({ "Name" = "${var.prefix}-private-b" })
+#     tomap({ "Name" = "${var.project}-private-b" })
 #   )
 # }
 
