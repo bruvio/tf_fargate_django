@@ -206,30 +206,4 @@ variable "force_destroy" {
   default     = false
 }
 
-# Variable for additional policies to attach to the bucket
-variable "additional_policy_statements" {
-  description = "Additional policy statements to include in the bucket policy."
-  type = list(object({
-    sid         = string
-    effect      = string
-    actions     = list(string)
-    not_actions = optional(list(string), [])
-    resources   = list(string)
-    principals = object({
-      type        = string
-      identifiers = list(string)
-    })
-    not_principals = optional(object({ #
-      type        = string
-      identifiers = list(string)
-    }), null)
-    condition = optional(list(object({
-      test     = string
-      variable = string
-      values   = list(string)
-      operator = optional(string, "StringEquals") # Operator support added
-    })), [])                                      # Default to an empty list if not provided
-    version = optional(string, "")
-  }))
-  default = []
-}
+
