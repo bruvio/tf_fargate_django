@@ -15,7 +15,7 @@ resource "aws_s3_bucket_public_access_block" "block_public_access" {
 }
 
 resource "aws_s3_bucket_versioning" "bucket_versioning" {
-  bucket = aws_s3_bucket.bucket.id
+  bucket = aws_s3_bucket.app_public_files.id
 
   versioning_configuration {
     status = var.disable_versioning ? "Disabled" : "Enabled"
