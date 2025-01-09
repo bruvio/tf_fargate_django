@@ -118,3 +118,7 @@ variable "vpc_cidr" {
 variable "env" {
 
 }
+
+variable "force_new_deployment" {
+ default= "true"
+}
