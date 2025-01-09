@@ -122,3 +122,12 @@ variable "env" {
 variable "force_new_deployment" {
   default = "true"
 }
+
+variable "enable_deployment_circuit_breaker" {
+  type    = bool
+  default = true
+}
+variable "enable_rollback" {
+  type    = bool
+  default = true
+}

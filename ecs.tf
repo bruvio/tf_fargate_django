@@ -271,6 +271,10 @@ resource "aws_ecs_service" "api" {
     security_groups  = [aws_security_group.ecs_service.id]
     assign_public_ip = false # Typically false for Fargate in private subnets
   }
+  deployment_circuit_breaker {
+    enable   = var.enable_deployment_circuit_breaker
+    rollback = var.enable_rollback
+  }
 
   load_balancer {
     target_group_arn = aws_lb_target_group.api.arn
