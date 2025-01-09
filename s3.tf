@@ -173,3 +173,10 @@ resource "aws_s3_bucket_logging" "this" {
   }
 }
 
+# Create a combined policy with base and additional policies
+data "aws_iam_policy_document" "combined_policy" {
+  source_policy_documents = compact(concat(
+    var.enable_ssl ? [data.aws_iam_policy_document.ssl_policy.json] : [],
+    [for statement in var.additional_policy_statements : jsonencode(statement)]
+  ))
+}
