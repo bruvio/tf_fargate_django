@@ -109,11 +109,11 @@ resource "aws_iam_policy" "ecs_s3_access" {
         Effect = "Allow"
         Action = [
           "s3:PutObject",
-          "s3:GetObjectAcl",
+          # "s3:GetObjectAcl",
           "s3:GetObject",
           "s3:ListBucket",
           "s3:DeleteObject",
-          "s3:PutObjectAcl"
+          # "s3:PutObjectAcl"
         ]
         Resource = [
           "${aws_s3_bucket.app_public_files.arn}/*",
