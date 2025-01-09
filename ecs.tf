@@ -189,7 +189,7 @@ resource "aws_ecs_task_definition" "api" {
       mountPoints = [
         {
           readOnly      = false
-          containerPath = "/vol/web/static"
+          containerPath = "/vol/static"
           sourceVolume  = "static"
         }
       ]

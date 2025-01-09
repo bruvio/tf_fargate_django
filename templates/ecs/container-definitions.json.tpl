@@ -36,7 +36,7 @@
         "mountPoints": [
             {
                 "readOnly": false,
-                "containerPath": "/vol/web",
+                "containerPath": "/vol",
                 "sourceVolume": "static"
             }
         ]
