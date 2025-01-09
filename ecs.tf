@@ -170,7 +170,7 @@ resource "aws_ecs_task_definition" "api" {
         { name = "S3_STORAGE_BUCKET_REGION", value = var.region },
         { name = "SERVICE_DISCOVERY_NAMESPACE_ID", value = local.service_namespace_id },
         { name = "SYSTEM_ENV", value = "PRODUCTION" },
-        { name = "DEBUG", value = "0" }
+        { name = "DEBUG", value = "0" },
         { name = "S3_STORAGE_BACKEND", value = "1" }
       ]
       logConfiguration = {
@@ -260,11 +260,11 @@ resource "aws_security_group" "ecs_service" {
 # ECS Service
 # ----------------------------
 resource "aws_ecs_service" "api" {
-  name            = "${var.project}-api"
-  cluster         = aws_ecs_cluster.main.name
-  task_definition = aws_ecs_task_definition.api.arn
-  desired_count   = 1
-  launch_type     = "FARGATE"
+  name                 = "${var.project}-api"
+  cluster              = aws_ecs_cluster.main.name
+  task_definition      = aws_ecs_task_definition.api.arn
+  desired_count        = 1
+  launch_type          = "FARGATE"
   force_new_deployment = var.force_new_deployment
   network_configuration {
     subnets          = module.vpc.private_subnets

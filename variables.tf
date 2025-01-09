@@ -120,5 +120,5 @@ variable "env" {
 }
 
 variable "force_new_deployment" {
- default= "true"
+  default = "true"
 }
