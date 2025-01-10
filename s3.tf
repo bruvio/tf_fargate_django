@@ -21,3 +21,21 @@ resource "aws_s3_bucket_versioning" "bucket_versioning" {
     status = var.disable_versioning ? "Disabled" : "Enabled"
   }
 }
+
+
+# Attach the bucket policy to allow public read access
+resource "aws_s3_bucket_policy" "public_read_policy" {
+  bucket = aws_s3_bucket.your_bucket.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect    = "Allow"
+        Principal = "*"
+        Action    = "s3:GetObject"
+        Resource  = "arn:aws:s3:::${aws_s3_bucket.app_public_files.id}/*"
+      }
+    ]
+  })
+}
