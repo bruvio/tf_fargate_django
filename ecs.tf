@@ -162,7 +162,7 @@ resource "aws_ecs_task_definition" "api" {
         { name = "DB_NAME", value = aws_db_instance.main.db_name },
         { name = "DB_USER", value = aws_db_instance.main.username },
         { name = "DB_PASS", value = aws_db_instance.main.password },
-        { name = "ALLOWED_HOSTS", value = "${aws_route53_record.app.fqdn},${aws_lb.api.dns_name}" },
+        { name = "ALLOWED_HOSTS", value = "${aws_route53_record.app.fqdn},${aws_lb.api.dns_name},${join(",", module.vpc.private_subnets_cidr_blocks)}" },
         { name = "ADMIN_EMAIL", value = var.admin_email },
         { name = "ADMIN_PASSWORD", value = var.admin_password },
         { name = "ADMIN", value = var.admin },
