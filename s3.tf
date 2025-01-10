@@ -21,19 +21,3 @@ resource "aws_s3_bucket_versioning" "bucket_versioning" {
     status = var.disable_versioning ? "Disabled" : "Enabled"
   }
 }
-resource "aws_s3_bucket_policy" "app_public_files_policy" {
-  bucket = aws_s3_bucket.app_public_files.id
-
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Sid       = "PublicReadGetObject",
-        Effect    = "Allow",
-        Principal = "*",
-        Action    = "s3:GetObject",
-        Resource  = "${aws_s3_bucket.app_public_files.arn}/*"
-      }
-    ]
-  })
-}
