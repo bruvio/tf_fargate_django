@@ -56,7 +56,7 @@ resource "aws_lb_listener" "api_https" {
 
 
 resource "aws_lb_listener_rule" "host_header_rule" {
-  listener_arn = aws_lb_listener.https.arn
+  listener_arn = aws_lb_listener.api_https.arn
   priority     = 100
 
   conditions {
