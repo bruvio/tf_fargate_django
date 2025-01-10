@@ -154,4 +154,10 @@ variable "force_destroy" {
   default     = false
 }
 
+variable "bypass_shared_password" {
+  default = "False"
 
+}
+variable "shared_password" {
+  default = "secret"
+}
