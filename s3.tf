@@ -25,7 +25,7 @@ resource "aws_s3_bucket_versioning" "bucket_versioning" {
 
 # Attach the bucket policy to allow public read access
 resource "aws_s3_bucket_policy" "public_read_policy" {
-  bucket = aws_s3_bucket.your_bucket.id
+  bucket = aws_s3_bucket.app_public_files.id
 
   policy = jsonencode({
     Version = "2012-10-17"
