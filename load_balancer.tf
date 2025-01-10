@@ -65,7 +65,7 @@ resource "aws_lb_listener_rule" "host_header_rule" {
     }
   }
 
-  actions {
+  action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.api.arn
   }
