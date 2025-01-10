@@ -136,7 +136,7 @@ variable "enable_rollback" {
 variable "allow_public_access" {
   description = "Allow public access (not recommended)"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "disable_versioning" {
