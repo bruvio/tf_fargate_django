@@ -13,8 +13,8 @@ resource "aws_lb_target_group" "api" {
   protocol = "HTTP"
   vpc_id   = module.vpc.vpc_id
 
-  # target_type = "ip"
-  port = 8000
+  target_type = "ip"
+  port        = 8000
 
   health_check {
     path                = "/"
