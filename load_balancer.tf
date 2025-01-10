@@ -23,6 +23,11 @@ resource "aws_lb_target_group" "api" {
     timeout             = 5
     healthy_threshold   = 2
     unhealthy_threshold = 2
+    matcher             = "200-399" # Allow status codes in the range 200 to 399
+    enabled             = true
+    http_headers = {
+      Host = "${aws_route53_record.app.fqdn}"
+    }
   }
 }
 
