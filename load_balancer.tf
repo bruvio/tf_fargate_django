@@ -23,11 +23,6 @@ resource "aws_lb_target_group" "api" {
     timeout             = 5
     healthy_threshold   = 2
     unhealthy_threshold = 2
-    matcher             = "200-399" # Allow status codes in the range 200 to 399
-    enabled             = true
-    http_headers = {
-      Host = "${aws_route53_record.app.fqdn}"
-    }
   }
 }
 
@@ -54,6 +49,23 @@ resource "aws_lb_listener" "api_https" {
   certificate_arn = aws_acm_certificate_validation.cert.certificate_arn
 
   default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.api.arn
+  }
+}
+
+
+resource "aws_lb_listener_rule" "host_header_rule" {
+  listener_arn = aws_lb_listener.https.arn
+  priority     = 100
+
+  conditions {
+    host_header {
+      values = ["${aws_route53_record.app.fqdn}"]
+    }
+  }
+
+  actions {
     type             = "forward"
     target_group_arn = aws_lb_target_group.api.arn
   }
