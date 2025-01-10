@@ -237,8 +237,19 @@ resource "aws_ecs_task_definition" "api" {
         { name = "DB_NAME", value = aws_db_instance.main.db_name },
         { name = "DB_USER", value = aws_db_instance.main.username },
         { name = "DB_PASS", value = aws_db_instance.main.password },
+        { name = "CSRF_TRUSTED_ORIGINS", value = "https://${aws_route53_record.app.fqdn},http://${aws_route53_record.app.fqdn}" },
+        { name = "ALLOWED_HOSTS", value = "${aws_route53_record.app.fqdn},${aws_lb.api.dns_name}" },
         { name = "ADMIN_EMAIL", value = var.admin_email },
-        { name = "ADMIN_PASSWORD", value = var.admin_password }
+        { name = "ADMIN_PASSWORD", value = var.admin_password },
+        { name = "SHARED_PASSWORD", value = var.shared_password },
+        { name = "BYPASS_SHARED_PASSWORD", value = var.bypass_shared_password },
+        { name = "ADMIN", value = var.admin },
+        { name = "S3_STORAGE_BUCKET_NAME", value = aws_s3_bucket.app_public_files.bucket },
+        { name = "S3_STORAGE_BUCKET_REGION", value = var.region },
+        { name = "SERVICE_DISCOVERY_NAMESPACE_ID", value = local.service_namespace_id },
+        { name = "SYSTEM_ENV", value = "PRODUCTION" },
+        { name = "DEBUG", value = "0" },
+        { name = "S3_STORAGE_BACKEND", value = "1" }
       ]
       logConfiguration = {
         logDriver = "awslogs"
