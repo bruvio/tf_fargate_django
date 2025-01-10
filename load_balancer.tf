@@ -17,11 +17,11 @@ resource "aws_lb_target_group" "api" {
   port        = 8000
 
   health_check {
-    path                = "/"
+    path                = "/health/"
     protocol            = "HTTP"
     interval            = 30
     timeout             = 5
-    healthy_threshold   = 3
+    healthy_threshold   = 2
     unhealthy_threshold = 2
   }
 }
