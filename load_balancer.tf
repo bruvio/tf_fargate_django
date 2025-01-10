@@ -59,7 +59,7 @@ resource "aws_lb_listener_rule" "host_header_rule" {
   listener_arn = aws_lb_listener.api_https.arn
   priority     = 100
 
-  conditions {
+  condition {
     host_header {
       values = ["${aws_route53_record.app.fqdn}"]
     }
