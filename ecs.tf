@@ -162,9 +162,8 @@ resource "aws_ecs_task_definition" "api" {
         { name = "DB_NAME", value = aws_db_instance.main.db_name },
         { name = "DB_USER", value = aws_db_instance.main.username },
         { name = "DB_PASS", value = aws_db_instance.main.password },
-        { name = "CSRF_TRUSTED_ORIGINS", value =  "https://${aws_route53_record.app.fqdn},http://${aws_route53_record.app.fqdn}"},
-        { name = "ALLOWED_HOSTS", value = "${aws_route53_record.app.fqdn},${aws_lb.api.dns_name}"
-        },
+        { name = "CSRF_TRUSTED_ORIGINS", value = "https://${aws_route53_record.app.fqdn},http://${aws_route53_record.app.fqdn}" },
+        { name = "ALLOWED_HOSTS", value = "${aws_route53_record.app.fqdn},${aws_lb.api.dns_name}" },
         { name = "ADMIN_EMAIL", value = var.admin_email },
         { name = "ADMIN_PASSWORD", value = var.admin_password },
         { name = "SHARED_PASSWORD", value = var.shared_password },
@@ -222,13 +221,39 @@ resource "aws_ecs_task_definition" "api" {
         }
       ]
 
+    },
+    {
+      name              = "init"
+      image             = var.ecr_image_api
+      essential         = false
+      memoryReservation = 128
+      command = [
+        "sh", "-c",
+        "python manage.py wait_for_db && python manage.py migrate && python manage.py collectstatic --noinput && python manage.py createsu"
+      ]
+      environment = [
+        { name = "DJANGO_SECRET_KEY", value = var.django_secret_key },
+        { name = "DB_HOST", value = aws_db_instance.main.address },
+        { name = "DB_NAME", value = aws_db_instance.main.db_name },
+        { name = "DB_USER", value = aws_db_instance.main.username },
+        { name = "DB_PASS", value = aws_db_instance.main.password },
+        { name = "ADMIN_EMAIL", value = var.admin_email },
+        { name = "ADMIN_PASSWORD", value = var.admin_password }
+      ]
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          "awslogs-group"         = aws_cloudwatch_log_group.ecs_task_logs.name
+          "awslogs-region"        = var.region
+          "awslogs-stream-prefix" = "init"
+        }
+      }
     }
   ])
 
-
-
   tags = var.common_tags
 }
+
 
 # ----------------------------
 # Security Group for ECS Service
