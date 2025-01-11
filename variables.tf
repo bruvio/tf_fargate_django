@@ -51,10 +51,10 @@ variable "subdomain" {
   description = "Subdomain per environment"
   type        = map(string)
   default = {
-    production = "api"
-    staging    = "api.staging"
-    dev        = "api.dev"
-    default    = "api.dev"
+    production = ""
+    test       = "test"
+    dev        = "dev"
+    default    = "dev"
   }
 }
 
@@ -87,11 +87,11 @@ variable "common_tags" {
 
 variable "cpu" {
   description = "ECS Fargate task cpu"
-  default     = 256
+  default     = 1024
 }
 variable "memory" {
   description = "ECS Fargate task cpu"
-  default     = 512
+  default     = 2048
 }
 
 
@@ -100,7 +100,7 @@ variable "rds_storage" {
   description = "RDS storage"
 }
 variable "rds_instance" {
-  default     = "db.t2.micro"
+  default     = "db.m5.large"
   description = "RDS instance class"
 }
 variable "bastion_instance" {
@@ -113,4 +113,54 @@ variable "az_count" {
 }
 variable "vpc_cidr" {
   default = "10.0.0.0/16"
-} 
+}
+
+variable "env" {
+
+}
+
+variable "force_new_deployment" {
+  default = "true"
+}
+
+variable "enable_deployment_circuit_breaker" {
+  type    = bool
+  default = true
+}
+variable "enable_rollback" {
+  type    = bool
+  default = true
+}
+
+
+variable "allow_public_access" {
+  description = "Allow public access (not recommended)"
+  type        = bool
+  default     = true
+}
+
+variable "disable_versioning" {
+  description = "Disable versioning on bucket objects."
+  type        = bool
+  default     = false
+}
+variable "enable_execute_command" {
+  description = "whether to enable ssh into container"
+  default     = true
+}
+
+
+
+variable "force_destroy" {
+  description = "(Optional, Default:false ) A boolean that indicates all objects should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable."
+  type        = bool
+  default     = false
+}
+
+variable "bypass_shared_password" {
+  default = "False"
+
+}
+variable "shared_password" {
+  default = "secret"
+}

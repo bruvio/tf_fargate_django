@@ -8,7 +8,7 @@ data "aws_ami" "amazon_linux" {
 }
 
 resource "aws_iam_role" "bastion" {
-  name               = "${var.prefix}-bastion"
+  name               = "${var.project}-bastion"
   assume_role_policy = file("${path.module}/templates/bastion/instance-profile-policy.json")
 
   tags = var.common_tags
@@ -20,7 +20,7 @@ resource "aws_iam_role_policy_attachment" "bastion_attach_policy" {
 }
 
 resource "aws_iam_instance_profile" "bastion" {
-  name = "${var.prefix}-bastion-instance-profile"
+  name = "${var.project}-bastion-instance-profile"
   role = aws_iam_role.bastion.name
 }
 
@@ -40,13 +40,13 @@ resource "aws_instance" "bastion" {
 
   tags = merge(
     var.common_tags,
-    tomap({ "Name" = "${var.prefix}-bastion" })
+    tomap({ "Name" = "${var.project}-bastion" })
   )
 }
 
 resource "aws_security_group" "bastion" {
   description = "Control bastion inbound and outbound access"
-  name        = "${var.prefix}-bastion"
+  name        = "${var.project}-bastion"
   vpc_id      = module.vpc.vpc_id
 
   ingress {
@@ -79,6 +79,6 @@ resource "aws_security_group" "bastion" {
 
   tags = merge(
     var.common_tags,
-    tomap({ "Name" = "${var.prefix}-sg-bastion" })
+    tomap({ "Name" = "${var.project}-sg-bastion" })
   )
 }

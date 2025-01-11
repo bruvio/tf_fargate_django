@@ -29,3 +29,6 @@ output "access-key-secret" {
   value     = aws_iam_access_key.access-key.secret
 }
 
+output "private_subnets_cidr_blocks" {
+  value = module.vpc.private_subnets_cidr_blocks
+}

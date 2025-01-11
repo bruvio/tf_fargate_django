@@ -11,7 +11,7 @@
 
 #   tags = merge(
 #     var.common_tags,
-#     tomap({ "Name" = "${var.prefix}-vpc" })
+#     tomap({ "Name" = "${var.project}-vpc" })
 #   )
 # }
 
@@ -37,7 +37,7 @@
 #   vpc_id = aws_vpc.main.id
 #   tags = merge(
 #     var.common_tags,
-#     tomap({ "Name" = "${var.prefix}-main" })
+#     tomap({ "Name" = "${var.project}-main" })
 
 #   )
 # }
@@ -57,7 +57,7 @@
 #   depends_on = [aws_internet_gateway.gw]
 #   tags = merge(
 #     var.common_tags,
-#     tomap({ "Name" = "${var.prefix}-main" })
+#     tomap({ "Name" = "${var.project}-main" })
 
 #   )
 # }
@@ -68,7 +68,7 @@
 #   allocation_id = element(aws_eip.gw.*.id, count.index)
 #   tags = merge(
 #     var.common_tags,
-#     tomap({ "Name" = "${var.prefix}-main" })
+#     tomap({ "Name" = "${var.project}-main" })
 
 #   )
 # }
@@ -84,7 +84,7 @@
 #   }
 #   tags = merge(
 #     var.common_tags,
-#     tomap({ "Name" = "${var.prefix}-main" })
+#     tomap({ "Name" = "${var.project}-main" })
 
 #   )
 # }
@@ -105,7 +105,7 @@
 #   # policy            = data.aws_iam_policy_document.s3_ecr_access.json
 #   tags = merge(
 #     var.common_tags,
-#     tomap({ "Name" = "${var.prefix}-main" })
+#     tomap({ "Name" = "${var.project}-main" })
 
 #   )
 # }
@@ -120,7 +120,7 @@
 #   subnet_ids          = aws_subnet.private.*.id
 #   tags = merge(
 #     var.common_tags,
-#     tomap({ "Name" = "${var.prefix}-main" })
+#     tomap({ "Name" = "${var.project}-main" })
 
 #   )
 # }
@@ -134,7 +134,7 @@
 #   subnet_ids          = aws_subnet.private.*.id
 #   tags = merge(
 #     var.common_tags,
-#     tomap({ "Name" = "${var.prefix}-main" })
+#     tomap({ "Name" = "${var.project}-main" })
 
 #   )
 # }
@@ -147,7 +147,7 @@
 #   subnet_ids          = aws_subnet.private.*.id
 #   tags = merge(
 #     var.common_tags,
-#     tomap({ "Name" = "${var.prefix}-main" })
+#     tomap({ "Name" = "${var.project}-main" })
 
 #   )
 
@@ -161,7 +161,7 @@
 #   subnet_ids          = aws_subnet.private.*.id
 #   tags = merge(
 #     var.common_tags,
-#     tomap({ "Name" = "${var.prefix}-main" })
+#     tomap({ "Name" = "${var.project}-main" })
 
 #   )
 # }

@@ -1,5 +1,5 @@
 resource "aws_lb" "api" {
-  name               = "${var.prefix}-main"
+  name               = "${var.project}-main"
   load_balancer_type = "application"
   subnets            = module.vpc.public_subnets
 
@@ -9,7 +9,7 @@ resource "aws_lb" "api" {
 }
 
 resource "aws_lb_target_group" "api" {
-  name     = "${var.prefix}-api"
+  name     = "${var.project}-api"
   protocol = "HTTP"
   vpc_id   = module.vpc.vpc_id
 
@@ -17,7 +17,13 @@ resource "aws_lb_target_group" "api" {
   port        = 8000
 
   health_check {
-    path = "/admin/login/"
+    path                = "/health/"
+    protocol            = "HTTP"
+    interval            = 60
+    timeout             = 30
+    healthy_threshold   = 3
+    unhealthy_threshold = 3
+    matcher             = "200-299"
   }
 }
 
@@ -50,9 +56,26 @@ resource "aws_lb_listener" "api_https" {
 }
 
 
+resource "aws_lb_listener_rule" "host_header_rule" {
+  listener_arn = aws_lb_listener.api_https.arn
+  priority     = 100
+
+  condition {
+    host_header {
+      values = ["${aws_route53_record.app.fqdn}"]
+    }
+  }
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.api.arn
+  }
+}
+
+
 resource "aws_security_group" "lb" {
   description = "Allow access to Application Load Balancer"
-  name        = "${var.prefix}-lb"
+  name        = "${var.project}-lb"
   vpc_id      = module.vpc.vpc_id
 
 
