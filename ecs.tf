@@ -298,9 +298,9 @@ resource "aws_security_group_rule" "allow_alb_health_checks" {
   protocol                 = "tcp"
   security_group_id        = aws_security_group.ecs_service.id
   source_security_group_id = aws_security_group.lb.id
-  lifecycle {
-    prevent_destroy = true
-  }
+  # lifecycle {
+  #   prevent_destroy = true
+  # }
 }
 
 # ----------------------------
