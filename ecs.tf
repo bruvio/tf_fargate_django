@@ -328,7 +328,10 @@ resource "aws_ecs_service" "api" {
     container_name   = "proxy"
     container_port   = 8000
   }
-
+  enable_execute_command = var.enable_execute_command
+  deployment_configuration {
+    health_check_grace_period_seconds = 300 # 5 minutes
+  }
   depends_on = [aws_lb_listener.api_https]
 
   tags = var.common_tags

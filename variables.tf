@@ -144,7 +144,10 @@ variable "disable_versioning" {
   type        = bool
   default     = false
 }
-
+variable "enable_execute_command " {
+  description = "whether to enable ssh into container"
+  default     = true
+}
 
 
 
