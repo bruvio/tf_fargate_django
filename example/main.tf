@@ -1,13 +1,10 @@
-# terraform {
-#   backend "s3" {
-#     bucket         = "bucket"
-#     key            = ".tfstate"
-#     region         = "us-east=1"
-#     encrypt        = true
-#     dynamodb_table = "table"
-#   }
-# }
-
+terraform {
+  backend "s3" {
+    key     = "<project>/terraform.tfstate"
+    region  = "eu-west-2"
+    encrypt = true
+  }
+}
 
 terraform {
   required_version = ">= 1.0.0, < 2.0.0"
@@ -27,9 +24,8 @@ provider "aws" {
 
 locals {
   contact = "<chooseme>"
-  project = "<chooseme>"
-  region  = "us-east-1"
-  prefix  = "<chooseme>-${terraform.workspace}"
+  project = var.project
+  region  = data.aws_region.current.name
   common_tags = {
     Environment = terraform.workspace
     Project     = local.project
@@ -45,7 +41,7 @@ data "aws_caller_identity" "current" {}
 
 
 module "this" {
-  source            = "git@github.com:bruvio/tf_fargate_django.git?ref=feature/endpoints"
+  source            = "git@github.com:bruvio/tf_fargate_django.git"
   project           = local.project
   admin             = var.admin
   table_name        = var.table_name
@@ -56,14 +52,16 @@ module "this" {
   admin_email       = var.admin_email
   state_bucket      = var.state_bucket
   dns_zone_name     = var.dns_zone_name
-  ecr_image_proxy   = "${data.aws_caller_identity.current.account_id}.dkr.ecr.${data.aws_region.current.name}.amazonaws.com/${local.project}-proxy:latest"
-  ecr_image_api     = "${data.aws_caller_identity.current.account_id}.dkr.ecr.${data.aws_region.current.name}.amazonaws.com/${local.project}:latest"
-  contact           = local.contact
-  prefix            = local.prefix
-  bastion_key_name  = var.bastion_key_name
-  db_name           = var.db_name
-  bucket_name       = var.bucket_name
-  region            = local.region
-  common_tags       = local.common_tags
+  # ecr_image_proxy   = "${data.aws_caller_identity.current.account_id}.dkr.ecr.${data.aws_region.current.name}.amazonaws.com/${local.project}-proxy:${var.service_version}"
+  ecr_image_proxy  = "${data.aws_caller_identity.current.account_id}.dkr.ecr.${data.aws_region.current.name}.amazonaws.com/${local.project}-proxy:0b20e15"
+  ecr_image_api    = "${data.aws_caller_identity.current.account_id}.dkr.ecr.${data.aws_region.current.name}.amazonaws.com/${local.project}:${var.service_version}"
+  contact          = local.contact
+  prefix           = var.prefix
+  bastion_key_name = var.bastion_key_name
+  db_name          = var.db_name
+  bucket_name      = var.bucket_name
+  region           = local.region
+  common_tags      = local.common_tags
+  env              = var.env
 
 }
