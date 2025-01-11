@@ -87,11 +87,11 @@ variable "common_tags" {
 
 variable "cpu" {
   description = "ECS Fargate task cpu"
-  default     = 512
+  default     = 1024
 }
 variable "memory" {
   description = "ECS Fargate task cpu"
-  default     = 1024
+  default     = 2048
 }
 
 

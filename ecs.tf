@@ -229,7 +229,7 @@ resource "aws_ecs_task_definition" "api" {
       memoryReservation = 128
       command = [
         "sh", "-c",
-        "python manage.py wait_for_db && python manage.py migrate && python manage.py collectstatic --noinput && python manage.py createsu"
+        "python manage.py wait_for_db && python manage.py makemigrations && python manage.py migrate && python manage.py collectstatic --noinput && python manage.py createsu"
       ]
       environment = [
         { name = "DJANGO_SECRET_KEY", value = var.django_secret_key },
