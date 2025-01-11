@@ -326,7 +326,7 @@ resource "aws_ecs_service" "api" {
   load_balancer {
     target_group_arn = aws_lb_target_group.api.arn
     container_name   = "proxy"
-    container_port   = 8000
+    container_port   = 9000
   }
 
   depends_on = [aws_lb_listener.api_https]
