@@ -164,3 +164,7 @@ variable "bypass_shared_password" {
 variable "shared_password" {
   default = "secret"
 }
+variable "engine_version" {
+  description = "database engine version"
+  default     = 12
+}
