@@ -11,7 +11,7 @@ resource "aws_lb" "api" {
 
 resource "aws_lb_target_group" "api" {
   name     = "${var.project}-api"
-  protocol = "HTTPS"
+  protocol = "HTTP"
   vpc_id   = module.vpc.vpc_id
 
   target_type = "ip"
@@ -19,7 +19,7 @@ resource "aws_lb_target_group" "api" {
 
   health_check {
     path                = "/health/"
-    protocol            = "HTTPS"
+    protocol            = "HTTP"
     interval            = 60
     timeout             = 30
     healthy_threshold   = 3
