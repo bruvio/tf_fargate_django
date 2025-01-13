@@ -40,3 +40,19 @@ resource "aws_s3_bucket_policy" "public_read_policy" {
   })
 }
 
+//////////////////////////
+//      Encryption      //
+//////////////////////////
+data "aws_kms_alias" "s3" {
+  name = "alias/aws/s3"
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "sse" {
+  bucket = aws_s3_bucket.app_public_files.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
+}
