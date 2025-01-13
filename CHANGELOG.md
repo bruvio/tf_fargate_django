@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/bruvio/tf_fargate_django/compare/1.0.3...1.0.4) (2025-01-13)
+
+
+### Bug Fixes
+
+* health check protocol ([ef31ee2](https://github.com/bruvio/tf_fargate_django/commit/ef31ee223a55368c66d45e2ae8117040b18f0914))
+
 ## [1.0.2](https://github.com/bruvio/tf_fargate_django/compare/1.0.1...1.0.2) (2025-01-11)
 
 
