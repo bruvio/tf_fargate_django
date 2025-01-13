@@ -52,8 +52,10 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "sse" {
 
   rule {
     apply_server_side_encryption_by_default {
-      kms_master_key_id = data.aws_kms_alias.s3.id != "" ? data.aws_kms_alias.s3.id : ""
-      sse_algorithm     = data.aws_kms_alias.s3.id != "" ? "aws:kms" : "aws:s3"
+      sse_algorithm = data.aws_kms_alias.s3.id != "" ? "aws:kms" : "AES256"
+
+      # Only set kms_master_key_id if using aws:kms
+      kms_master_key_id = data.aws_kms_alias.s3.id != "" ? data.aws_kms_alias.s3.id : null
     }
   }
 }
