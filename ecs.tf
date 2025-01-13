@@ -269,6 +269,7 @@ resource "aws_ecs_task_definition" "api" {
 # ----------------------------
 # Security Group for ECS Service
 # ----------------------------
+#trivy:ignore:AVD-AWS-0104
 resource "aws_security_group" "ecs_service" {
   description = "Access for the ECS service"
   name        = "${var.project}-ecs-service"

@@ -24,15 +24,15 @@ resource "aws_security_group" "rds" {
     ]
   }
 
-  ingress {
-    # New ingress rule for your local machine
-    protocol  = "tcp"
-    from_port = 5432
-    to_port   = 5432
-    cidr_blocks = [
-      "YOUR_PUBLIC_IP/32", # Replace YOUR_PUBLIC_IP with your actual public IP address
-    ]
-  }
+  # ingress {
+  #   # New ingress rule for your local machine
+  #   protocol  = "tcp"
+  #   from_port = 5432
+  #   to_port   = 5432
+  #   cidr_blocks = [
+  #     "YOUR_PUBLIC_IP/32", # Replace YOUR_PUBLIC_IP with your actual public IP address
+  #   ]
+  # }
 
   tags = var.common_tags
 }

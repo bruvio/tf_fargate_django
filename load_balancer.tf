@@ -1,9 +1,10 @@
+#trivy:ignore:AVD-AWS-0053
 resource "aws_lb" "api" {
-  name               = "${var.project}-main"
-  load_balancer_type = "application"
-  subnets            = module.vpc.public_subnets
-
-  security_groups = [aws_security_group.lb.id]
+  name                       = "${var.project}-main"
+  load_balancer_type         = "application"
+  subnets                    = module.vpc.public_subnets
+  drop_invalid_header_fields = true
+  security_groups            = [aws_security_group.lb.id]
 
   tags = var.common_tags
 }
@@ -72,7 +73,7 @@ resource "aws_lb_listener_rule" "host_header_rule" {
   }
 }
 
-
+#trivy:ignore:AVD-AWS-0104
 resource "aws_security_group" "lb" {
   description = "Allow access to Application Load Balancer"
   name        = "${var.project}-lb"

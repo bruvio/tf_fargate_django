@@ -39,3 +39,21 @@ resource "aws_s3_bucket_policy" "public_read_policy" {
     ]
   })
 }
+
+//////////////////////////
+//      Encryption      //
+//////////////////////////
+data "aws_kms_alias" "s3" {
+  name = "alias/aws/s3"
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "sse" {
+  bucket = aws_s3_bucket.app_public_files.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      kms_master_key_id = data.aws_kms_alias.s3.id != "" ? data.aws_kms_alias.s3.id : ""
+      sse_algorithm     = data.aws_kms_alias.s3.id != "" ? "aws:kms" : "aws:s3"
+    }
+  }
+}
