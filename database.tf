@@ -10,21 +10,33 @@ resource "aws_db_subnet_group" "main" {
 
 resource "aws_security_group" "rds" {
   description = "Allow access to the RDS database instance."
-  name        = "${var.project}-rds-inbound-access"
+  name        = "${var.prefix}-rds-inbound-access"
   vpc_id      = module.vpc.vpc_id
 
   ingress {
+    # Existing ingress rule for Bastion and ECS services
     protocol  = "tcp"
     from_port = 5432
     to_port   = 5432
     security_groups = [
-      aws_security_group.bastion.id,
+      # aws_security_group.bastion.id,
       aws_security_group.ecs_service.id,
     ]
   }
 
+  # ingress {
+  #   # New ingress rule for your local machine
+  #   protocol  = "tcp"
+  #   from_port = 5432
+  #   to_port   = 5432
+  #   cidr_blocks = [
+  #     "YOUR_PUBLIC_IP/32", # Replace YOUR_PUBLIC_IP with your actual public IP address
+  #   ]
+  # }
+
   tags = var.common_tags
 }
+
 
 resource "aws_db_instance" "main" {
   identifier                 = "${var.project}-db"
@@ -33,7 +45,7 @@ resource "aws_db_instance" "main" {
   allocated_storage          = var.rds_storage
   storage_type               = "gp2"
   engine                     = "postgres"
-  engine_version             = "14"
+  engine_version             = var.engine_version
   instance_class             = var.rds_instance
   db_subnet_group_name       = aws_db_subnet_group.main.name
   password                   = var.db_password

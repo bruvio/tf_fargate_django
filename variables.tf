@@ -164,3 +164,19 @@ variable "bypass_shared_password" {
 variable "shared_password" {
   default = "secret"
 }
+variable "engine_version" {
+  description = "database engine version"
+  default     = 12
+}
+
+variable "private" {
+  description = "Flag to determine whether to limit access to a specific IP or allow access from anywhere"
+  type        = bool
+  default     = false
+}
+
+variable "my_ip" {
+  description = "Your machine's public IP address"
+  type        = string
+  default     = "YOUR_IP/32" # Replace YOUR_IP with your actual public IP
+}

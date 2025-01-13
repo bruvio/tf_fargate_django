@@ -32,14 +32,6 @@ resource "tls_private_key" "pk" {
   rsa_bits  = 4096
 }
 
-resource "aws_key_pair" "kp" {
-  key_name   = "${var.project}-${var.bastion_key_name}" # Create "myKey" to AWS!!var.bastion_key_name
-  public_key = tls_private_key.pk.public_key_openssh
-
-  provisioner "local-exec" { # Create "myKey.pem" to your computer!!
-    command = "echo '${tls_private_key.pk.private_key_pem}' > ./${var.project}-myKey.pem"
-  }
-}
 
 resource "aws_iam_policy" "AppApiCi-proxy" {
   name = "${var.project}-AppApi-CI-proxy"
