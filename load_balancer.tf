@@ -19,7 +19,7 @@ resource "aws_lb_target_group" "api" {
 
   health_check {
     path                = "/health/"
-    protocol            = "HTTP"
+    protocol            = "HTTPS"
     interval            = 60
     timeout             = 30
     healthy_threshold   = 3
