@@ -1,3 +1,15 @@
+## [1.0.6](https://github.com/bruvio/tf_fargate_django/compare/1.0.5...1.0.6) (2025-01-13)
+
+
+### Bug Fixes
+
+* db creds ([ebd8d82](https://github.com/bruvio/tf_fargate_django/commit/ebd8d821ca4a482df4c857146b515a7486e399b2))
+
+
+### Reverts
+
+* health check protocol ([30d2945](https://github.com/bruvio/tf_fargate_django/commit/30d294577b8e24778675656202e9ba8559be1054))
+
 ## [1.0.5](https://github.com/bruvio/tf_fargate_django/compare/1.0.4...1.0.5) (2025-01-13)
 
 
