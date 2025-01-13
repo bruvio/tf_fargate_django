@@ -11,7 +11,7 @@ resource "aws_lb" "api" {
 
 resource "aws_lb_target_group" "api" {
   name     = "${var.project}-api"
-  protocol = "HTTP"
+  protocol = "HTTPS"
   vpc_id   = module.vpc.vpc_id
 
   target_type = "ip"
