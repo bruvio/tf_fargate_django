@@ -180,3 +180,7 @@ variable "my_ip" {
   type        = string
   default     = "YOUR_IP/32" # Replace YOUR_IP with your actual public IP
 }
+
+variable "google_maps_api_key" {
+  description = "google api key"
+}
