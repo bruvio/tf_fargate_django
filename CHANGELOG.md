@@ -1,3 +1,10 @@
+## [1.0.7](https://github.com/bruvio/tf_fargate_django/compare/1.0.6...1.0.7) (2025-01-14)
+
+
+### Bug Fixes
+
+* add google_maps_api_key_variable ([fb91225](https://github.com/bruvio/tf_fargate_django/commit/fb912256c3bfb5ecc2929cb8c67346f30bdad444))
+
 ## [1.0.6](https://github.com/bruvio/tf_fargate_django/compare/1.0.5...1.0.6) (2025-01-13)
 
 
