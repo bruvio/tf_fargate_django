@@ -184,3 +184,10 @@ variable "my_ip" {
 variable "google_maps_api_key" {
   description = "google api key"
 }
+
+variable "container_env_vars" {
+  description = "A map of environment variables for each container"
+  type        = map(map(string))
+  default     = {}
+}
+
