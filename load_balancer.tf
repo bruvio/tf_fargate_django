@@ -18,7 +18,7 @@ resource "aws_lb_target_group" "api" {
   port        = 8000
 
   health_check {
-    path                = "/health/"
+    path                = "/health"
     protocol            = "HTTP"
     interval            = 60
     timeout             = 30
@@ -56,10 +56,25 @@ resource "aws_lb_listener" "api_https" {
   }
 }
 
+resource "aws_lb_listener_rule" "health_check_rule" {
+  listener_arn = aws_lb_listener.api.arn
+  priority     = 10
+
+  condition {
+    path_pattern {
+      values = ["/health"]
+    }
+  }
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.api.arn
+  }
+}
 
 resource "aws_lb_listener_rule" "host_header_rule" {
   listener_arn = aws_lb_listener.api_https.arn
-  priority     = 100
+  # priority     = 100
 
   condition {
     host_header {

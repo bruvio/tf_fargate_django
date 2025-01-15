@@ -156,7 +156,21 @@ resource "aws_ecs_task_definition" "api" {
       image             = var.ecr_image_api
       essential         = true
       memoryReservation = 256
-      environment       = [for key, value in var.container_env_vars["api"] : { name = key, value = value }]
+      environment = flatten([
+        [
+          { name = "DB_HOST", value = aws_db_instance.main.address },
+          { name = "DB_NAME", value = aws_db_instance.main.db_name },
+          { name = "S3_STORAGE_BUCKET_NAME", value = aws_s3_bucket.app_public_files.bucket },
+          { name = "S3_STORAGE_BUCKET_REGION", value = var.region },
+          { name = "CSRF_TRUSTED_ORIGINS", value = "https://${aws_route53_record.app.fqdn},http://${aws_route53_record.app.fqdn}" },
+          { name = "ALLOWED_HOSTS", value = "${aws_route53_record.app.fqdn},${aws_lb.api.dns_name}" },
+          { name = "SERVICE_DISCOVERY_NAMESPACE_ID", value = local.service_namespace_id },
+          { name = "SYSTEM_ENV", value = "PRODUCTION" },
+          { name = "DEBUG", value = "0" },
+          { name = "S3_STORAGE_BACKEND", value = "1" }
+        ],
+        [for key, value in var.container_env_vars["api"] : { name = key, value = value }]
+      ])
       logConfiguration = {
         logDriver = "awslogs"
         options = {
@@ -178,7 +192,16 @@ resource "aws_ecs_task_definition" "api" {
       image             = var.ecr_image_proxy
       essential         = true
       memoryReservation = 256
-      environment       = [for key, value in var.container_env_vars["proxy"] : { name = key, value = value }]
+      environment = flatten([
+        [
+          { name = "APP_HOST", value = "127.0.0.1" },
+          { name = "APP_PORT", value = "9000" },
+          { name = "LISTEN_PORT", value = "8000" },
+          { name = "S3_STORAGE_BUCKET_NAME", value = aws_s3_bucket.app_public_files.bucket },
+          { name = "S3_STORAGE_BUCKET_REGION", value = var.region }
+        ],
+        [for key, value in var.container_env_vars["proxy"] : { name = key, value = value }]
+      ])
       logConfiguration = {
         logDriver = "awslogs"
         options = {
@@ -200,11 +223,25 @@ resource "aws_ecs_task_definition" "api" {
       image             = var.ecr_image_api
       essential         = false
       memoryReservation = 128
-      command           = [
+      command = [
         "sh", "-c",
         "python manage.py wait_for_db && python manage.py makemigrations && python manage.py migrate && python manage.py collectstatic --noinput && python manage.py createsu"
       ]
-      environment       = [for key, value in var.container_env_vars["init"] : { name = key, value = value }]
+      environment = flatten([
+        [
+          { name = "DB_HOST", value = aws_db_instance.main.address },
+          { name = "DB_NAME", value = aws_db_instance.main.db_name },
+          { name = "S3_STORAGE_BUCKET_NAME", value = aws_s3_bucket.app_public_files.bucket },
+          { name = "S3_STORAGE_BUCKET_REGION", value = var.region },
+          { name = "CSRF_TRUSTED_ORIGINS", value = "https://${aws_route53_record.app.fqdn},http://${aws_route53_record.app.fqdn}" },
+          { name = "ALLOWED_HOSTS", value = "${aws_route53_record.app.fqdn},${aws_lb.api.dns_name}" },
+          { name = "SERVICE_DISCOVERY_NAMESPACE_ID", value = local.service_namespace_id },
+          { name = "SYSTEM_ENV", value = "PRODUCTION" },
+          { name = "DEBUG", value = "0" },
+          { name = "S3_STORAGE_BACKEND", value = "1" }
+        ],
+        [for key, value in var.container_env_vars["init"] : { name = key, value = value }]
+      ])
       logConfiguration = {
         logDriver = "awslogs"
         options = {
@@ -218,6 +255,7 @@ resource "aws_ecs_task_definition" "api" {
 
   tags = var.common_tags
 }
+
 
 # ----------------------------
 # Security Group for ECS Service
@@ -268,7 +306,7 @@ resource "aws_ecs_service" "api" {
   network_configuration {
     subnets          = module.vpc.private_subnets
     security_groups  = [aws_security_group.ecs_service.id]
-    assign_public_ip = false 
+    assign_public_ip = false
   }
   deployment_circuit_breaker {
     enable   = var.enable_deployment_circuit_breaker
