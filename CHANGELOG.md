@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/bruvio/tf_fargate_django/compare/1.0.7...1.1.0) (2025-01-15)
+
+
+### Features
+
+* pass env variable using a map ([b948826](https://github.com/bruvio/tf_fargate_django/commit/b948826e150e0e97064c664491438ffa7fe1b981))
+
 ## [1.0.7](https://github.com/bruvio/tf_fargate_django/compare/1.0.6...1.0.7) (2025-01-14)
 
 
