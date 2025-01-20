@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/bruvio/tf_fargate_django/compare/1.2.0...1.2.1) (2025-01-20)
+
+
+### Bug Fixes
+
+* reduce images to keep ([5e30460](https://github.com/bruvio/tf_fargate_django/commit/5e30460861f3bc5b4b531a011c18c709196af6a3))
+
 # [1.2.0](https://github.com/bruvio/tf_fargate_django/compare/1.1.1...1.2.0) (2025-01-20)
 
 
