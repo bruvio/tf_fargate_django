@@ -45,7 +45,7 @@ resource "aws_ecr_lifecycle_policy" "app" {
       selection = {
         tagStatus   = "any"
         countType   = "imageCountMoreThan"
-        countNumber = 10
+        countNumber = 3
       }
     }]
   })
@@ -64,7 +64,7 @@ resource "aws_ecr_lifecycle_policy" "proxy" {
       selection = {
         tagStatus   = "any"
         countType   = "imageCountMoreThan"
-        countNumber = 10
+        countNumber = 3
       }
     }]
   })
