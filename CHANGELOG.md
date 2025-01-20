@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/bruvio/tf_fargate_django/compare/1.1.1...1.2.0) (2025-01-20)
+
+
+### Features
+
+* define variables to enable vpce and to create subnets ([26cb24f](https://github.com/bruvio/tf_fargate_django/commit/26cb24fb5f4d12a0648d9de82e5685e45f48af5e))
+
 ## [1.1.1](https://github.com/bruvio/tf_fargate_django/compare/1.1.0...1.1.1) (2025-01-15)
 
 
