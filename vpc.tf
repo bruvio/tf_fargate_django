@@ -6,9 +6,26 @@ module "vpc" {
   name = "${var.project}-vpc"
   cidr = var.vpc_cidr
 
-  azs             = ["${var.region}a", "${var.region}b", "${var.region}c"]
-  private_subnets = ["10.0.0.0/24", "10.0.1.0/24", "10.0.2.0/24"]
-  public_subnets  = ["10.0.100.0/24", "10.0.101.0/24", "10.0.102.0/24"]
+  azs = ["${var.region}a", "${var.region}b", "${var.region}c"]
+
+
+
+
+  public_subnets = [
+    cidrsubnet(var.vpc_cidr, var.public_subnet_bits, 0),
+    cidrsubnet(var.vpc_cidr, var.public_subnet_bits, 1),
+    cidrsubnet(var.vpc_cidr, var.public_subnet_bits, 2)
+  ]
+
+
+  private_subnets = [
+    cidrsubnet(var.vpc_cidr, var.private_subnet_bits, 3),
+    cidrsubnet(var.vpc_cidr, var.private_subnet_bits, 4),
+    cidrsubnet(var.vpc_cidr, var.private_subnet_bits, 5)
+  ]
+
+
+  # Example Output
 
   enable_nat_gateway     = false
   single_nat_gateway     = false

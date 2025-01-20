@@ -33,3 +33,4 @@ output "private_subnets_cidr_blocks" {
 output "loadbalancer_arn" {
   value = aws_lb.api.arn
 }
+

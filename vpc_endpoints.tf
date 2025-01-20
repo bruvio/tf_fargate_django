@@ -1,6 +1,5 @@
 
 # VPC Endpoint Security Group
-
 resource "aws_security_group" "vpc_endpoint" {
   name   = "${var.project}-vpce-sg"
   vpc_id = module.vpc.vpc_id
@@ -14,12 +13,12 @@ resource "aws_security_group" "vpc_endpoint" {
     var.common_tags,
     tomap({ "Name" = "${var.project}-sg-vpc-endpoint" })
   )
-
 }
 
 # VPC Endpoints
 
 resource "aws_vpc_endpoint" "s3" {
+  count             = var.enable_s3_endpoint ? 1 : 0
   vpc_id            = module.vpc.vpc_id
   service_name      = "com.amazonaws.${data.aws_region.current.name}.s3"
   vpc_endpoint_type = "Gateway"
@@ -28,105 +27,88 @@ resource "aws_vpc_endpoint" "s3" {
     var.common_tags,
     tomap({ "Name" = "${var.project}-s3-endpoint" })
   )
-
 }
 
 resource "aws_vpc_endpoint" "dkr" {
+  count               = var.enable_dkr_endpoint ? 1 : 0
   vpc_id              = module.vpc.vpc_id
   private_dns_enabled = true
   service_name        = "com.amazonaws.${data.aws_region.current.name}.ecr.dkr"
   vpc_endpoint_type   = "Interface"
-  security_group_ids = [
-    aws_security_group.vpc_endpoint.id,
-  ]
-  subnet_ids = module.vpc.private_subnets
+  security_group_ids  = [aws_security_group.vpc_endpoint.id]
+  subnet_ids          = module.vpc.private_subnets
   tags = merge(
     var.common_tags,
     tomap({ "Name" = "${var.project}-dkr-endpoint" })
   )
-
 }
 
 resource "aws_vpc_endpoint" "dkr_api" {
+  count               = var.enable_dkr_api_endpoint ? 1 : 0
   vpc_id              = module.vpc.vpc_id
   private_dns_enabled = true
   service_name        = "com.amazonaws.${data.aws_region.current.name}.ecr.api"
   vpc_endpoint_type   = "Interface"
-  security_group_ids = [
-    aws_security_group.vpc_endpoint.id,
-  ]
-  subnet_ids = module.vpc.private_subnets
+  security_group_ids  = [aws_security_group.vpc_endpoint.id]
+  subnet_ids          = module.vpc.private_subnets
   tags = merge(
     var.common_tags,
     tomap({ "Name" = "${var.project}-dkr-api-endpoint" })
   )
-
 }
 
 resource "aws_vpc_endpoint" "logs" {
-  vpc_id = module.vpc.vpc_id
-
+  count               = var.enable_logs_endpoint ? 1 : 0
+  vpc_id              = module.vpc.vpc_id
   private_dns_enabled = true
   service_name        = "com.amazonaws.${data.aws_region.current.name}.logs"
   vpc_endpoint_type   = "Interface"
-  security_group_ids = [
-    aws_security_group.vpc_endpoint.id,
-  ]
-  subnet_ids = module.vpc.private_subnets
+  security_group_ids  = [aws_security_group.vpc_endpoint.id]
+  subnet_ids          = module.vpc.private_subnets
   tags = merge(
     var.common_tags,
     tomap({ "Name" = "${var.project}-logs-endpoint" })
   )
-
 }
 
 resource "aws_vpc_endpoint" "secretsmanager" {
-  vpc_id = module.vpc.vpc_id
-
+  count               = var.enable_secretsmanager_endpoint ? 1 : 0
+  vpc_id              = module.vpc.vpc_id
   private_dns_enabled = true
   service_name        = "com.amazonaws.${data.aws_region.current.name}.secretsmanager"
   vpc_endpoint_type   = "Interface"
-  security_group_ids = [
-    aws_security_group.vpc_endpoint.id,
-  ]
-  subnet_ids = module.vpc.private_subnets
+  security_group_ids  = [aws_security_group.vpc_endpoint.id]
+  subnet_ids          = module.vpc.private_subnets
   tags = merge(
     var.common_tags,
     tomap({ "Name" = "${var.project}-secretsmanager-endpoint" })
   )
-
 }
 
 resource "aws_vpc_endpoint" "ssm" {
-  vpc_id = module.vpc.vpc_id
-
+  count               = var.enable_ssm_endpoint ? 1 : 0
+  vpc_id              = module.vpc.vpc_id
   private_dns_enabled = true
   service_name        = "com.amazonaws.${data.aws_region.current.name}.ssm"
   vpc_endpoint_type   = "Interface"
-  security_group_ids = [
-    aws_security_group.vpc_endpoint.id,
-  ]
-  subnet_ids = module.vpc.private_subnets
+  security_group_ids  = [aws_security_group.vpc_endpoint.id]
+  subnet_ids          = module.vpc.private_subnets
   tags = merge(
     var.common_tags,
     tomap({ "Name" = "${var.project}-ssm-endpoint" })
   )
-
 }
 
 resource "aws_vpc_endpoint" "kms" {
-  vpc_id = module.vpc.vpc_id
-
+  count               = var.enable_kms_endpoint ? 1 : 0
+  vpc_id              = module.vpc.vpc_id
   private_dns_enabled = true
   service_name        = "com.amazonaws.${data.aws_region.current.name}.kms"
   vpc_endpoint_type   = "Interface"
-  security_group_ids = [
-    aws_security_group.vpc_endpoint.id,
-  ]
-  subnet_ids = module.vpc.private_subnets
+  security_group_ids  = [aws_security_group.vpc_endpoint.id]
+  subnet_ids          = module.vpc.private_subnets
   tags = merge(
     var.common_tags,
     tomap({ "Name" = "${var.project}-kms-endpoint" })
   )
-
 }

@@ -191,3 +191,46 @@ variable "container_env_vars" {
   default     = {}
 }
 
+# Variables for VPC Endpoint Enablement
+variable "enable_s3_endpoint" {
+  default     = false
+  description = "Enable the S3 VPC endpoint"
+}
+
+variable "enable_dkr_endpoint" {
+  default     = false
+  description = "Enable the ECR DKR VPC endpoint"
+}
+
+variable "enable_dkr_api_endpoint" {
+  default     = false
+  description = "Enable the ECR API VPC endpoint"
+}
+
+variable "enable_logs_endpoint" {
+  default     = false
+  description = "Enable the CloudWatch Logs VPC endpoint"
+}
+
+variable "enable_secretsmanager_endpoint" {
+  default     = false
+  description = "Enable the Secrets Manager VPC endpoint"
+}
+
+variable "enable_ssm_endpoint" {
+  default     = false
+  description = "Enable the SSM VPC endpoint"
+}
+
+variable "enable_kms_endpoint" {
+  default     = false
+  description = "Enable the KMS VPC endpoint"
+}
+
+variable "public_subnet_bits" {
+  default = 3
+}
+
+variable "private_subnet_bits" {
+  default = 3
+}
