@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/bruvio/tf_fargate_django/compare/1.2.1...1.3.0) (2025-01-21)
+
+
+### Features
+
+* define variable to specify number of az ([f7bb4e4](https://github.com/bruvio/tf_fargate_django/commit/f7bb4e456bfb39532fc1b3e8376d514427698764))
+
 ## [1.2.1](https://github.com/bruvio/tf_fargate_django/compare/1.2.0...1.2.1) (2025-01-20)
 
 
