@@ -234,3 +234,9 @@ variable "public_subnet_bits" {
 variable "private_subnet_bits" {
   default = 3
 }
+
+variable "num_azs" {
+  description = "The number of availability zones to use."
+  type        = number
+  default     = 1
+}
